@@ -1,11 +1,11 @@
-/*
+ï»¿/*
 #include <iostream>
 #include <time.h>
 using namespace std;
 
 int main() {
-	// »ó¼ö :  º¯ÇÏÁö ¾Ê´Â ¼ö. °ªÀ» ÇÑ¹ø ÁöÁ¤ÇØ³õÀ¸¸é ¹Ù²Ü ¼ö ¾ø´Ù.
-	// »ó¼ö´Â ¼±¾ð°ú µ¿½Ã¿¡ °ªÀ» ÁöÁ¤ÇØ µÖ¾ß ÇÔ.
+	// ìƒìˆ˜ :  ë³€í•˜ì§€ ì•ŠëŠ” ìˆ˜. ê°’ì„ í•œë²ˆ ì§€ì •í•´ë†“ìœ¼ë©´ ë°”ê¿€ ìˆ˜ ì—†ë‹¤.
+	// ìƒìˆ˜ëŠ” ì„ ì–¸ê³¼ ë™ì‹œì— ê°’ì„ ì§€ì •í•´ ë‘¬ì•¼ í•¨.
 
 	const int iAttack = 0x00000001;		//			1
 	const int iArmor = 0x00000002;		//		   10
@@ -14,18 +14,18 @@ int main() {
 	const int iCritical = 0x00000010;	//		10000
 
 
-	// °ø°Ý,Ã¼·Â,Å©¸®Æ¼ÄÃ ¹öÇÁ ÇÒ´ç
+	// ê³µê²©,ì²´ë ¥,í¬ë¦¬í‹°ì»¬ ë²„í”„ í• ë‹¹
 	//			 001 | 100 | 10000 =  10101
 	int iBuf = iAttack | iHP | iCritical;
 
-	//¿¬»êÀÚ Ãà¾àÇü : ¿¬»êÀÚ¸¦ ÁÙ¿©¼­ »ç¿ëÇÒ ¼ö ÀÖ´Ù.
+	//ì—°ì‚°ìž ì¶•ì•½í˜• : ì—°ì‚°ìžë¥¼ ì¤„ì—¬ì„œ ì‚¬ìš©í•  ìˆ˜ ìžˆë‹¤.
 	
 	// 10101 ^ 00100 = 10001 = 17;
 	iBuf ^= iHP;
 	// 10001 ^ 00100 = 10101 = 21;
 	iBuf ^= iHP;
 	
-	// XOR ¿¬»êÀ» ÀÌ¿ëÇØ¼­ ½ºÀ§Ä¡ ±â´ÉÀ» ±¸ÇöÇÒ ¼ö ÀÖÀ½.
+	// XOR ì—°ì‚°ì„ ì´ìš©í•´ì„œ ìŠ¤ìœ„ì¹˜ ê¸°ëŠ¥ì„ êµ¬í˜„í•  ìˆ˜ ìžˆìŒ.
 
 
 	// 10101 & 00001 = 1;
@@ -46,13 +46,13 @@ int main() {
 
 
 		//*********************************************************
-		//½¬ÇÁÆ® ¿¬»êÀÚ : <<, >> °ª ´ë °ªÀ» ¿¬»êÇÏ¿© °ªÀ¸·Î ³ª¿À°Ô µÈ´Ù.
-		//ÀÌ ¿¬»êÀÚ ¶ÇÇÑ ÀÌÁø¼ö ´ÜÀ§ÀÇ ¿¬»êÀ» ÇÏ°Ô µÈ´Ù.
+		//ì‰¬í”„íŠ¸ ì—°ì‚°ìž : <<, >> ê°’ ëŒ€ ê°’ì„ ì—°ì‚°í•˜ì—¬ ê°’ìœ¼ë¡œ ë‚˜ì˜¤ê²Œ ëœë‹¤.
+		//ì´ ì—°ì‚°ìž ë˜í•œ ì´ì§„ìˆ˜ ë‹¨ìœ„ì˜ ì—°ì‚°ì„ í•˜ê²Œ ëœë‹¤.
 		//20 << 2 = 80	->	20*(2^2)
 		//20 << 3 = 160	->	20*(2^3)
 		//20 << 4 = 320	->	20*(2^4)
 		
-		//¿ìÃø½¬ÇÁÆ® ¿¬»êÀº ºü¸¥ ³ª´©±â ¿ªÇÒ(Á¤¼ö ´ë Á¤¼öÀÇ ³ª´®. ¼Ò¼öÁ¡ ¹ö¸²)
+		//ìš°ì¸¡ì‰¬í”„íŠ¸ ì—°ì‚°ì€ ë¹ ë¥¸ ë‚˜ëˆ„ê¸° ì—­í• (ì •ìˆ˜ ëŒ€ ì •ìˆ˜ì˜ ë‚˜ëˆ”. ì†Œìˆ˜ì  ë²„ë¦¼)
 
 		//20 >> 2 = 5	->	20/(2^2)
 		//20 >> 3 = 2 ->	20/(2^3)
@@ -63,28 +63,28 @@ int main() {
 	int iLow = 13560;
 
 	int iNumber = iHigh;
-	// iNumber¿¡´Â 187ÀÌ µé¾î°¡ÀÖ´Ù. ÀÌ °ªÀ» ÁÂÃø½¬ÇÁÆ®·Î 16ºñÆ® ¿¬»êÇÏ¸é
-	// »óÀ§ 16ºñÆ®¿¡ °ªÀÌ µé¾î°¡°Ô µÊ.
+	// iNumberì—ëŠ” 187ì´ ë“¤ì–´ê°€ìžˆë‹¤. ì´ ê°’ì„ ì¢Œì¸¡ì‰¬í”„íŠ¸ë¡œ 16ë¹„íŠ¸ ì—°ì‚°í•˜ë©´
+	// ìƒìœ„ 16ë¹„íŠ¸ì— ê°’ì´ ë“¤ì–´ê°€ê²Œ ë¨.
 	iNumber <<= 16;
 
-	// ÇÏÀ§ 16ºñÆ®¸¦ Ã¤¿î´Ù.
+	// í•˜ìœ„ 16ë¹„íŠ¸ë¥¼ ì±„ìš´ë‹¤.
 
 	iNumber |= iLow;
 
-	//High °ªÀ» Ãâ·ÂÇÑ´Ù.
+	//High ê°’ì„ ì¶œë ¥í•œë‹¤.
 
 	cout << "iHigh : " << iHigh << endl;
 	cout << "iNumber High bit : " << (iNumber >> 16) << endl;
 	cout << "iLow : " << iLow << endl;
 	cout << "iNumber Low bit : " << (iNumber & 0x0000ffff) << endl;
 
-	//Áõ°¨¿¬»êÀÚ : ++ ,-- °¡ ÀÖÀ½ 1Áõ°¡, 1°¨¼Ò
+	//ì¦ê°ì—°ì‚°ìž : ++ ,-- ê°€ ìžˆìŒ 1ì¦ê°€, 1ê°ì†Œ
 	iNumber = 10;
 
-	//ÀüÄ¡
+	//ì „ì¹˜
 	++iNumber;
 
-	//ÈÄÄ¡
+	//í›„ì¹˜
 	iNumber++;
 
 	cout << ++iNumber << endl;
@@ -93,61 +93,61 @@ int main() {
 
 
 	//******************
-	  //ºÐ±â¹®¿¡´Â Å©°Ô 2°¡Áö Á¾·ù°¡ ÀÖ´Ù. if¹®, switch ¹®ÀÌ Á¸ÀçÇÑ´Ù.
-	  //if¹® : Á¶°ÇÀ» Ã¼Å©ÇØÁÖ´Â ±â´ÉÀÌ´Ù.
-	  //ÇüÅÂ : if(Á¶°Ç½Ä){ ... };
-	  //if¹®Àº Á¶°Ç½ÄÀÌ true°¡ µÉ °æ¿ì ÄÚµåºí·° ¾ÈÀÇ ÄÚµå°¡ µ¿ÀÛµÈ´Ù.
-	  //falseÀÏ °æ¿ì¿¡´Â µ¿ÀÛµÇÁö ¾Ê´Â´Ù.
-	  //if¹® ¾Æ·¡¿¡ µé¾î°¥ ÄÚµå°¡ 1ÁÙÀÏ °æ¿ì {}(ÄÚµåºí·°)À» »ý·«ÇÒ ¼ö ÀÖ´Ù.
+	  //ë¶„ê¸°ë¬¸ì—ëŠ” í¬ê²Œ 2ê°€ì§€ ì¢…ë¥˜ê°€ ìžˆë‹¤. ifë¬¸, switch ë¬¸ì´ ì¡´ìž¬í•œë‹¤.
+	  //ifë¬¸ : ì¡°ê±´ì„ ì²´í¬í•´ì£¼ëŠ” ê¸°ëŠ¥ì´ë‹¤.
+	  //í˜•íƒœ : if(ì¡°ê±´ì‹){ ... };
+	  //ifë¬¸ì€ ì¡°ê±´ì‹ì´ trueê°€ ë  ê²½ìš° ì½”ë“œë¸”ëŸ­ ì•ˆì˜ ì½”ë“œê°€ ë™ìž‘ëœë‹¤.
+	  //falseì¼ ê²½ìš°ì—ëŠ” ë™ìž‘ë˜ì§€ ì•ŠëŠ”ë‹¤.
+	  //ifë¬¸ ì•„ëž˜ì— ë“¤ì–´ê°ˆ ì½”ë“œê°€ 1ì¤„ì¼ ê²½ìš° {}(ì½”ë“œë¸”ëŸ­)ì„ ìƒëžµí•  ìˆ˜ ìžˆë‹¤.
 	//***************
 	if (true) {
-		cout << "if¹® Á¶°ÇÀÌ true ÀÔ´Ï´Ù." << endl;
+		cout << "ifë¬¸ ì¡°ê±´ì´ true ìž…ë‹ˆë‹¤." << endl;
 	}
 
-	// ¹öÇÁ°¡ ÀÖ´ÂÁö È®ÀÎÇÑ´Ù.
+	// ë²„í”„ê°€ ìžˆëŠ”ì§€ í™•ì¸í•œë‹¤.
 
 	if ((iBuf & iAttack) != 0) {
-		cout << "Attack ¹öÇÁ°¡ ÀÖ½À´Ï´Ù. " << endl;
+		cout << "Attack ë²„í”„ê°€ ìžˆìŠµë‹ˆë‹¤. " << endl;
 	}
 	if ((iBuf & iArmor) != 0)
-		cout << "Armor ¹öÇÁ°¡ ÀÖ½À´Ï´Ù. " << endl;
+		cout << "Armor ë²„í”„ê°€ ìžˆìŠµë‹ˆë‹¤. " << endl;
 	if ((iBuf & iHP) != 0)
-		cout << "HP ¹öÇÁ°¡ ÀÖ½À´Ï´Ù." << endl;
+		cout << "HP ë²„í”„ê°€ ìžˆìŠµë‹ˆë‹¤." << endl;
 	if ((iBuf & iMP) != 0)
-		cout << "MP ¹öÇÁ°¡ ÀÖ½À´Ï´Ù." << endl;
+		cout << "MP ë²„í”„ê°€ ìžˆìŠµë‹ˆë‹¤." << endl;
 	if ((iBuf & iCritical) != 0)
-		cout << "Critical ¹öÇÁ°¡ ÀÖ½À´Ï´Ù." << endl;
+		cout << "Critical ë²„í”„ê°€ ìžˆìŠµë‹ˆë‹¤." << endl;
 	
 	//****************
-	//	else : if¹®°ú ¹Ýµå½Ã °°ÀÌ »ç¿ëÀÌ µÇ¾î¾ß ÇÑ´Ù.
-	//	if¹® Á¶°ÇÀÌ falseÀÏ °æ¿ì else°¡ ÀÖ´Ù¸é else±¸¹® ¾ÈÀÇ ÄÚµå°¡ µ¿ÀÛµÈ´Ù.
+	//	else : ifë¬¸ê³¼ ë°˜ë“œì‹œ ê°™ì´ ì‚¬ìš©ì´ ë˜ì–´ì•¼ í•œë‹¤.
+	//	ifë¬¸ ì¡°ê±´ì´ falseì¼ ê²½ìš° elseê°€ ìžˆë‹¤ë©´ elseêµ¬ë¬¸ ì•ˆì˜ ì½”ë“œê°€ ë™ìž‘ëœë‹¤.
 
-	//	else if: if¹®°ú ¹Ýµå½Ã °°ÀÌ »ç¿ëÀÌ µÇ¾î¾ßÇÑ´Ù.
-	//	if¹® ¾Æ·¡ ¿Í¾ß ÇÏ°í else º¸´Ù´Â À§¿¡ ÀÖ¾î¾ß ÇÑ´Ù.
-	//	else if´Â ÀÚ½ÅÀÇ À§¿¡ ÀÖ´Â Á¶°Ç½ÄÀÌ falseÀÏ °æ¿ì ´ÙÀ½ else ifÀÇ Á¶°Ç½ÄÀ» Ã¼Å©ÇÑ´Ù.
-	//	else if´Â ¸î°³µç »ç¿ëÀÌ °¡´ÉÇÏ´Ù.
+	//	else if: ifë¬¸ê³¼ ë°˜ë“œì‹œ ê°™ì´ ì‚¬ìš©ì´ ë˜ì–´ì•¼í•œë‹¤.
+	//	ifë¬¸ ì•„ëž˜ ì™€ì•¼ í•˜ê³  else ë³´ë‹¤ëŠ” ìœ„ì— ìžˆì–´ì•¼ í•œë‹¤.
+	//	else ifëŠ” ìžì‹ ì˜ ìœ„ì— ìžˆëŠ” ì¡°ê±´ì‹ì´ falseì¼ ê²½ìš° ë‹¤ìŒ else ifì˜ ì¡°ê±´ì‹ì„ ì²´í¬í•œë‹¤.
+	//	else ifëŠ” ëª‡ê°œë“  ì‚¬ìš©ì´ ê°€ëŠ¥í•˜ë‹¤.
 	//************
 
 	if (false) {
-		cout << "if¹® Á¶°ÇÀÌ true ÀÔ´Ï´Ù." << endl;
+		cout << "ifë¬¸ ì¡°ê±´ì´ true ìž…ë‹ˆë‹¤." << endl;
 	}
 	else {
-		cout << "if¹® Á¶°ÇÀÌ false ÀÔ´Ï´Ù." << endl;
+		cout << "ifë¬¸ ì¡°ê±´ì´ false ìž…ë‹ˆë‹¤." << endl;
 	}
 
-//	cout << "¼ýÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä : ";
+//	cout << "ìˆ«ìžë¥¼ ìž…ë ¥í•˜ì„¸ìš” : ";
 	//cin >> iNumber;
 //	if (10 <= iNumber && iNumber <= 20)
-//		cout << "10~20 »çÀÌÀÇ ¼ýÀÚÀÔ´Ï´Ù." << endl;
+//		cout << "10~20 ì‚¬ì´ì˜ ìˆ«ìžìž…ë‹ˆë‹¤." << endl;
 //	else if (21 <= iNumber && iNumber <= 30)
-//		cout << "20~30 »çÀÌÀÇ ¼ýÀÚÀÔ´Ï´Ù." << endl;
+//		cout << "20~30 ì‚¬ì´ì˜ ìˆ«ìžìž…ë‹ˆë‹¤." << endl;
 //	else if (31 <= iNumber && iNumber <= 40)
-//		cout << "30~40 »çÀÌÀÇ ¼ýÀÚÀÔ´Ï´Ù." << endl;
+//		cout << "30~40 ì‚¬ì´ì˜ ìˆ«ìžìž…ë‹ˆë‹¤." << endl;
 //	else
-//		cout << "±× ¿ÜÀÇ ¼ýÀÚÀÔ´Ï´Ù." << endl;
+//		cout << "ê·¸ ì™¸ì˜ ìˆ«ìžìž…ë‹ˆë‹¤." << endl;
 
 
-	// ³­¼ö ¹ß»ý
+	// ë‚œìˆ˜ ë°œìƒ
 	srand((unsigned int)time(0));
 
 	cout << rand() << endl;
@@ -156,7 +156,7 @@ int main() {
 	cout << ((rand() %100) + (rand()* 0.001)) << endl;
 	cout << (rand() % 10000 * 0.01f) << endl;
 
-	// ¾÷±×·¹ÀÌµå ¼öÄ¡
+	// ì—…ê·¸ë ˆì´ë“œ ìˆ˜ì¹˜
 	int iUpgrade = 0;
 	int iNum[15] = { 0 };
 	int iCount = 0;
@@ -165,10 +165,10 @@ int main() {
 		if (iUpgrade == 15) {
 			break;
 		}else{
-			//°­È­ È®·üÀ» ±¸ÇÔ.
+			//ê°•í™” í™•ë¥ ì„ êµ¬í•¨.
 			float fPercent = rand() % 10000 / 100.f;
 
-			//°­È­ È®·ü : ¾÷±×·¹ÀÌµå°¡ 0~3 :  100% ¼º°ø , 4~6 : 40% ,7~9 :10%,
+			//ê°•í™” í™•ë¥  : ì—…ê·¸ë ˆì´ë“œê°€ 0~3 :  100% ì„±ê³µ , 4~6 : 40% ,7~9 :10%,
 			//10~ 13 : 1%, 14~15 :0.01%
 			cout << "Percent : " << fPercent << endl;
 
@@ -204,15 +204,15 @@ int main() {
 				}
 			}
 			else {
-				cout << "´õ ÀÌ»ó °­È­ÇÒ ¼ö ¾ø½À´Ï´Ù." << endl;
+				cout << "ë” ì´ìƒ ê°•í™”í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤." << endl;
 			}
 			iNum[iUpgrade - 1] += 1;
 			iCount++;
 		}
 	}
-	cout << "15°­±îÁö °É¸° È½¼ö : " << iCount << endl;
+	cout << "15ê°•ê¹Œì§€ ê±¸ë¦° íšŸìˆ˜ : " << iCount << endl;
 	for (int i = 0; i < 15; i++) {
-		cout << "°­È­ " << i + 1 << "´Ü°è ÀÏ¶§ ½Ãµµ È½¼ö : " << iNum[i] << endl;
+		cout << "ê°•í™” " << i + 1 << "ë‹¨ê³„ ì¼ë•Œ ì‹œë„ íšŸìˆ˜ : " << iNum[i] << endl;
 	}
 	return 0;
 
