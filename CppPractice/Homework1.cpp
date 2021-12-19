@@ -42,14 +42,14 @@ int main() {
 	cout << "homework no.4" << endl;
 	// no.4
 
-	for (int i = 7; i > 0; i=i-2) {
-		for (int j = 1; j < i; j=j+2) {
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 3-i;++j) {
 			cout << " ";
 		}
-		for (int z = 7-i; z >= 0; z--) {
+		for (int j = 0; j < i*2+1; ++j) {
 			cout << "*" ;
 		}
-		for (int j = 1; j < i; j =j+2) {
+		for (int j = 0; j < 3-i; ++j) {
 			cout << " ";
 		}
 		cout << endl;
