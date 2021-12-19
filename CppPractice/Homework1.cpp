@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 
 using namespace std;
 
@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 	// no.1
 	for (int i = 2; i < 10; ++i) {
-		cout << "***±¸±¸´Ü " << i << " ´Ü***" << endl;
+		cout << "***êµ¬êµ¬ë‹¨ " << i << " ë‹¨***" << endl;
 		cout << endl;
 		for (int j = 1; j < 10; ++j) {
 			cout << i << " * " << j << " = " << i * j << endl;
