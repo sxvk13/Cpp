@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -49,6 +50,68 @@ int main() {
 	
 
 
+	system("cls");
+	//Lotto Program
 
+	int iLotto[45] = {};
+	int iRn;
+	srand((unsigned int) time(0));;
+	int i = 0;
+
+	for(int i=0;i<45;++i){
+		iLotto[i]= i+ 1;	
+	}
+
+	while(true){
+		if (i == 6)
+			break;
+
+		iRn = rand() % 45 + 1;
+		for (int j = 0; j < 45; ++j) {
+			if ((iLotto[j] != 0) && (iRn == iLotto[j])) {
+				cout << iLotto[j] << " ";
+				iLotto[j] = 0;
+				++i;
+				break;
+			}
+		}
+	}
+	cout << endl;
+	system("cls");
+	cout << endl;
+
+
+	//풀이
+
+	//1~45까지의 숫자를 차례대로 넣어줌.
+
+	for (int i = 0; i < 45; i++) {
+		iLotto[i] = i + 1;
+	}
+	//Swap 알고리즘
+	//int iNum1 =1, iNum2=2,  iNum3;
+	//iNum3=iNum1;
+	//iNum1=iNum2;
+	//iNUM2=iNum3;
+
+
+	//Shuffle - TCG게임에서 많이 사용
+	//Shuffle은 Swap알고리즘을 사용
+	int iTemp, idx1, idx2;
+	//100번정도 골고루 섞어줌.
+	for (int i = 0; i < 100; ++i) {
+		idx1 = rand() % 45; //0~44 번째 위치를 얻음
+		idx2 = rand() % 45; 
+
+		//위치 변경
+		iTemp = iLotto[idx1];
+		iLotto[idx1] = iLotto[idx2];
+		iLotto[idx2] = iTemp;
+	}	
+	for (int i = 0; i < 6; i++) {
+		cout << iLotto[i]<<" " ;
+	}
+	cout << "보너스 번호 : " << iLotto[6];
 	return 0;
 }
+
