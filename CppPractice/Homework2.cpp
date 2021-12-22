@@ -68,14 +68,16 @@ void play() {
 	int* iCheck;
 	//사용자의 번호 입력
 	while (true) {
-		for (int i = 0; i < 3; ++i) {
-			cout << i + 1 << " 번째 번호를 입력하세요 : ";
-			cin >> iNum[i];
-			//0 입력시 더이상 입력받지 않음
-			if (iNum[i] == 0)
-				break;
-			cout << endl;
-		}
+		//for (int i = 0; i < 3; ++i) {
+		//	cout << i + 1 << " 번째 번호를 입력하세요 : ";
+		//		cin >> iNum[i];
+		//	//0 입력시 더이상 입력받지 않음
+		//	if (iNum[i] == 0)
+		//		break;
+		//	cout << endl;
+		//}
+		cout << " 번호를 입력하세요 : ";
+		cin>> iNum[0]>>iNum[1]>>iNum[2];
 		//입력된 값이 0인경우 종료
 		if (iNum[0] == 0 || iNum[1] == 0 || iNum[2] == 0) {
 			cout << endl << "--------------게임을 종료합니다--------------" << endl;
