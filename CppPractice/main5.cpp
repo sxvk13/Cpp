@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <time.h>
 
+//console input ouput 헤더파일로 콘솔창에서 입출력 하는 기능들을 제공하는 헤더파일
+#include <conio.h>
 
 using namespace std;
 
@@ -59,47 +61,68 @@ int main() {
 			}
 			cout << endl << endl;
 		}
+
+		bool bWin = true;
+		//퍼즐을 맞췄는지 체크
+		for (int i = 0; i < 24; ++i) {
+			if (iNumber[i] != (i + 1)) {
+				bWin = false;
+				break;
+			}
+		}
+		if (bWin == true) {
+			cout << "숫자를 모두 맞췄습니다" << endl;
+			break;
+		}
 		cout << "w : 위  s : 아래 a : 왼쪽 d : 오른쪽 q : 종료 " << endl;
-		char key;
+		
 		int pos=0;
 		for (int i = 0; i < 25; ++i) {
 			if (iNumber[i] == INT_MAX) {
 				pos = i;
 			}
 		}
-		cin >> key;
+		//cin >> key;
+		char key = _getch();
+
 		iTemp = iNumber[pos];
 		switch (key) {
 		case 'w':
+		case 'W':
 			if (pos >= 5) {
 				iNumber[pos] = iNumber[pos - 5];
 				iNumber[pos - 5] = iTemp;
 			}
 			break;
 		case 's':
+		case 'S':
 			if (pos <= 19) {
 				iNumber[pos] = iNumber[pos + 5];
 				iNumber[pos + 5] = iTemp;
 			}
 			break;
 		case 'a':
+		case 'A':
 			if (pos > 0) {
 				iNumber[pos] = iNumber[pos-1];
 				iNumber[pos - 1] = iTemp;
 			}
 			break;
 		case 'd':
+		case 'D':
 			if (pos < 24) {
 				iNumber[pos] = iNumber[pos + 1];
 				iNumber[pos + 1] = iTemp;
 			}
 			break;
 		case 'q':
+		case 'Q':
 			cout << "게임을 종료합니다."<<endl;
 			exit(0);
 		default:
 			cout<<"잘못된 키 입력입니다."<<endl;
 		}
+
 	}
 	
 
