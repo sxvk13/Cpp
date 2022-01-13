@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿/*
+#include <iostream>
 #include <time.h>
 
 //console input ouput 헤더파일로 콘솔창에서 입출력 하는 기능들을 제공하는 헤더파일
@@ -128,3 +129,5 @@ int main() {
 
 	return 0;
 }
+
+*/
