@@ -1,5 +1,5 @@
 ﻿/*
-* Homework3 (Bingo game) + AI Easy Mode
+* Homework3 (Bingo game)(Lecture Code) + AI Easy Mode
 */
 #include <iostream>
 #include <time.h>
@@ -17,53 +17,44 @@ int main() {
 	srand((unsigned int)time(0));
 
 	// 빙고 숫자판을 위한 배열
-	int iUserNum[25] = {};
-	int iAiNum[25] = {};
+	int iNumber[25] = {}; //Player
+	int iAINumber[25] = {}; // AI
 
-
-	//각 숫자판 배열에 숫자 생성
+	// 배열에 1~25 까지 숫자 생성
 	for (int i = 0; i < 25; ++i) {
-		iUserNum[i] = iAiNum[i] = i + 1;
+		iNumber[i] = iAINumber[i] = i + 1;
 	}
 
-	//빙고판 셔플 및 AI 입력 값 미리 생성
+	//빙고판 셔플 
 	int iTemp, idx1, idx2;
-	for (int i = 0; i <2; ++i) {
-		switch (i) {
-		case 0:
-			//User 빙고판
-			for (int j = 0; j < 100; ++j) {
-				idx1 = rand() % 25;
-				idx2 = rand() % 25;
-				iTemp = iUserNum[idx1];
-				iUserNum[idx1] = iUserNum[idx2];
-				iUserNum[idx2] = iTemp;
-			}
-			break;
-		case 1:
-			//AI 빙고판
-			for (int j = 0; j < 100; ++j) {
-				idx1 = rand() % 25;
-				idx2 = rand() % 25;
-				iTemp = iAiNum[idx1];
-				iAiNum[idx1] = iAiNum[idx2];
-				iAiNum[idx2] = iTemp;
-			}
-			break;
-		}
+	for (int j = 0; j < 100; ++j) {
+		//User 빙고판
+		idx1 = rand() % 25;
+		idx2 = rand() % 25;
+		iTemp = iAINumber[idx1];
+		iAINumber[idx1] = iAINumber[idx2];
+		iAINumber[idx2] = iTemp;
+
+		//AI 빙고판
+		idx1 = rand() % 25;
+		idx2 = rand() % 25;
+		iTemp = iAINumber[idx1];
+		iAINumber[idx1] = iAINumber[idx2];
+		iAINumber[idx2] = iTemp;
 	}
-	
+
 	// 유저의 빙고 개수 , AI의 빙고 개수
 	// input 변수 ,Ai의 Input 카운트
-	int iUserBingo = 0, iAiBingo = 0;
-	int Number=0;
+	int iBingo = 0, iAiBingo = 0;
+
+	int iAiMode;
 	//AI 난이도 선택
 
 	while (true) {
 		cout << "1.EASY " << endl;
 		cout << "2.HARD " << endl;
 		cout << "AI 모드를 선택하세요. : ";
-		int iAiMode;
+
 		cin >> iAiMode;
 		if (iAiMode >= AM_EASY && iAiMode <= AM_HARD)
 			break;
@@ -73,42 +64,43 @@ int main() {
 	// 선택 안된 목록 배열 생성
 	int iNoneSelect[25] = {};
 	//선택 안된 숫자 개수를 저장
-	int iNoneSelectCount = 25;
+	int iNoneSelectCount = 0;
+
 
 	while (true) {
 		system("cls");
-		//빙고판 그리기.
-		cout << "==========USER BINGO BOARD==========" << endl << endl;
+		//Player 빙고판 그리기.
+		cout << "==========Player BINGO BOARD==========" << endl << endl;
 		for (int i = 0; i < 5; ++i) {
 			for (int j = 0; j < 5; ++j) {
-				if (iUserNum[i * 5 + j] == INT_MAX) {
+				if (iNumber[i * 5 + j] == INT_MAX) {
 					cout << "*\t";
 				}
 				else {
-					cout << iUserNum[i * 5 + j] << "\t";
+					cout << iNumber[i * 5 + j] << "\t";
 				}
 			}
 			cout << endl << endl;
 		}
-		cout <<"==========User Bingo Line  : "<<iUserBingo<<" =========="<< endl << endl;
-
+		cout << "==========User Bingo Line  : " << iBingo << " ==========" << endl << endl;
+		//AI 빙고판 출력
 		cout << endl << "==========AI BINGO BOARD==========" << endl << endl;
 		for (int i = 0; i < 5; ++i) {
 			for (int j = 0; j < 5; ++j) {
-				if (iAiNum[i * 5 + j] == INT_MAX) {
+				if (iAINumber[i * 5 + j] == INT_MAX) {
 					cout << "*\t";
 				}
 				else {
-					cout << iAiNum[i * 5 + j] << "\t";
+					cout << iAINumber[i * 5 + j] << "\t";
 				}
 			}
 			cout << endl << endl;
 		}
-		cout << "==========AI Bingo Line : " << iUserBingo <<" =========="<< endl << endl;
+		cout << "==========AI Bingo Line : " << iAiBingo << " ==========" << endl << endl;
 
 
 		//게임 승리 조건
-		if (iUserBingo >= 5) {
+		if (iBingo >= 5) {
 			cout << "USER 승리!" << endl;
 			break;
 		}
@@ -117,30 +109,47 @@ int main() {
 			break;
 		}
 
-
-		//USER가 맞출 번호 입력 
-		//0 입력시 게임이 종료
-		cout << endl<<"번호를 입력하세요 (0입력시 종료) :  ";
-		cin >> Number;		
-		if (Number == 0) {
-			cout <<endl << "게임을 종료합니다!" << endl << endl;
+		cout << "숫자를 입력하세요 (0 : 종료) : ";
+		int iInput;
+		cin >> iInput;
+		if (iInput == 0)
 			break;
-		}
-		//입력한 값이 1~25일때(정상범위)
-		else if (Number > 0 || Number < 26) {
-			//입력한 값과 빙고판 비교
-			//AI의 입력 값에 따른 빙고판 숫자 체크
-			for (int i = 0; i < 25; ++i) {
-				//일치하면 해당 index의 값을 INT_MAX 로 변경
-				if (iUserNum[i] == Number) {
-					iUserNum[i] = INT_MAX;
-				}
-				if (iAiNum[i] == Number) {
-					iAiNum[i] = INT_MAX;
-				}
+		else if (iInput < 1 || iInput>25)
+			continue;
+
+		// 중복입력을 체크하기 위한 변수로 기본적으로 중복되었다라고 하기위해 True 로설정.
+		bool bAcc = true;
+		// 모든 숫자를 차례대로 검사해서 입력한 숫자와 같은 숫자가 있는지 확인.
+		for (int i = 0; i < 25; ++i) {
+			if (iInput == iNumber[i]) {
+				//숫자를 찾았을 경우 중복된 숫자가 아니므로
+				// bAcc 변수를 false로 만들어준다.
+				bAcc = false;
+				//숫자를 *로 변경하기 위해 특수 값인INT_MAX 로 변경
+				iNumber[i] = INT_MAX;
+				//더이상 다른 숫자를 찾을 필요가 없으므로 반복문 탈출
+				break;
 			}
 		}
-	}
+		//bAcc변수가 true일 경우 중복된 숫자를 입력해서 숫자를 *로 
+		//바꾸지 못했으므로 다시 입력받도록 continue 해준다.
+		if (bAcc)
+			continue;
 
-	return 0;
+		//중복이 아니라면 AI의 숫자도 찾아서 *로 바꿔준다.
+		for (int i = 0; i < 25; ++i) {
+			if (iInput == iAINumber[i]) {
+				iAINumber[i] = INT_MAX;
+				break;
+			}
+		}
+
+		
+		//빙고 줄 수를 체크하는 것은 매번 숫자를 입력할 때마다 처음부터
+		//새로 카운트를 할 것이다. 그러므로 iBingo 변수를 0 으로 매번 초기화 하고
+		//새롭게 줄 수를 구해주도록 한다.
+		iBingo = 0;
+	}
+		return 0;
 }
+
