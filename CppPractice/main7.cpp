@@ -1,7 +1,7 @@
 ﻿/*
-* Homework3 (Bingo game)(Lecture Code) + AI Easy Mode
+* Homework3 (Bingo game)(Lecture Code) + AI Hard Mode
 */
-/*
+/**/
 #include <iostream>
 #include <time.h>
 #include <conio.h>
@@ -9,9 +9,29 @@
 using namespace std;
 
 enum AI_MODE {
-	AM_EASY=1,
-	AM_HARD=2
+	AM_EASY = 1,
+	AM_HARD = 2
 };
+
+
+enum LINE_NUMBER {
+	//LN_Hx : Horizontal Line Number
+	//LN_Vx : Verticla Line Number
+	//LN_LT,RT : Left Top , Right Top Number
+	LN_H1,
+	LN_H2,
+	LN_H3,
+	LN_H4,
+	LN_H5,
+	LN_V1,
+	LN_V2,
+	LN_V3,
+	LN_V4,
+	LN_V5,
+	LN_LT,
+	LN_RT
+};
+
 
 int main() {
 	// 랜덤 값을 생성하기 위한 srand 
@@ -48,8 +68,8 @@ int main() {
 	int iBingo = 0, iAIBingo = 0;
 	// AI Mode 변수
 	int iAiMode;
-	
-	
+
+
 	//AI 난이도 선택
 	while (true) {
 		cout << "1.EASY " << endl;
@@ -88,7 +108,7 @@ int main() {
 		switch (iAiMode) {
 		case AM_EASY:
 			cout << "AIMode : Easy" << endl;
-				break;
+			break;
 		case AM_HARD:
 			cout << "AIMode : Hard" << endl;
 			break;
@@ -162,7 +182,7 @@ int main() {
 
 			iNoneSelectCount = 0;
 			for (int i = 0; i < 25; ++i) {
-				
+
 				// 현재 숫자가 *이 아닐경우
 				if (iAINumber[i] != INT_MAX) {
 					//*이 아닌 숫자일 경우 iNoneSelectCount를 인덱스로 활용한다. 
@@ -179,6 +199,70 @@ int main() {
 			iInput = iNoneSelect[rand() % iNoneSelectCount];
 			break;
 		case AM_HARD:
+			//하드모드는 현재 숫자중 빙고줄 완성 가능성이 가장 높은 줄을
+			// 찾아서 그 줄에 있는 숫자중 하나를 *로 만들어준다.
+			int iLine;
+			int iStarCount=0;
+			int iSaveCount=0;
+
+			//가로라인 중 가장 *이 많은 라인을 찾아낸다.
+			for (int i = 0; i < 5; ++i) {
+				iStarCount = 0;
+				for (int j = 0; j < 5; ++j) {
+					if (iAINumber[i * 5 + j] == INT_MAX)
+						++iStarCount;
+				}
+				//별이 5개 미만이어야 빙고 줄이 아니고 기존에 가장많은
+				//라인의 별보다 커야 가장 별이 많은 라인이므로 라인을
+				//교체해주고 저장된 별 수 를 교체한다.
+
+				if (iStarCount < 5 && iSaveCount < iStarCount) {
+					//가로 라인중 가장 별이 많은 라인을 체크하는 부분.
+					//가로라인은 0~4로 의미부여함.
+					iLine = i;
+					iSaveCount = iStarCount;
+				}
+			}
+			// 가로 라인중 가장 별이 많은 라인은 이미 구했으므로,
+			// 저장된 값과 세로 라인들을 비교하여 별이 가장 많은 라인을 구한다.
+			for (int i = 0; i < 5; ++i) {
+				iStarCount = 0;
+				for (int j = 0; j < 5; ++j) {
+					if (iAINumber[j * 5 + i] == INT_MAX)
+						++iStarCount;
+				}
+				if (iStarCount < 5 && iSaveCount < iStarCount) {
+					//세로 라인중 가장 별이 많은 라인을 체크하는 부분.
+					//세로라인은 5~9로 의미부여함.
+					iLine = 5+i;
+					iSaveCount = iStarCount;
+				}
+			}
+			//왼쪽 ->오른쪽 대각선 체크
+			iStarCount = 0;
+			for (int i = 0; i < 25; i += 6) {
+				if (iAINumber[i] = INT_MAX)
+					++iStarCount;
+			}
+			if (iStarCount < 5 && iSaveCount < iStarCount) {
+				iLine = LN_LT;
+				iSaveCount = iStarCount;
+			}
+			//오른쪽 ->왼쪽 대각선 체크
+			iStarCount = 0;
+			for (int i = 4; i <= 20; i += 4) {
+				if (iAINumber[i] = INT_MAX)
+					++iStarCount;
+			}
+			if (iStarCount < 5 && iSaveCount < iStarCount) {
+				iLine = LN_RT;
+				iSaveCount = iStarCount;
+			}
+			//모든 라인을 조사했으면 iLine에 가능성이 가장 높은 줄 번호가 저장됨.
+			//그 줄에 있는 *이 아닌 숫자중 하나를 선택하게 한다.
+
+
+
 			break;
 		}
 		//AI가 숫자를 선택했으므로 플레이어와 AI의 숫자를 *로 바꿔준다.
@@ -253,7 +337,7 @@ int main() {
 		// 오른쪽 상단 -> 왼쪽 하단 대각선 체크
 		iStar1 = 0;
 		iAIStar1 = 0;
-		for (int i = 4; i <=20; i += 4) {
+		for (int i = 4; i <= 20; i += 4) {
 			if (iNumber[i] == INT_MAX)
 				++iStar1;
 			if (iAINumber[i] == INT_MAX)
@@ -264,7 +348,6 @@ int main() {
 		if (iAIStar1 == 5)
 			++iAIBingo;
 	}
-		return 0;
+	return 0;
 }
 
-*/
