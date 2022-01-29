@@ -1,7 +1,7 @@
 ﻿/*
 * Homework3 (Bingo game)(Lecture Code) + AI Hard Mode
 */
-/**/
+/*
 #include <iostream>
 #include <time.h>
 #include <conio.h>
@@ -9,6 +9,7 @@
 using namespace std;
 
 enum AI_MODE {
+
 	AM_EASY = 1,
 	AM_HARD = 2
 };
@@ -52,9 +53,9 @@ int main() {
 		//User 빙고판
 		idx1 = rand() % 25;
 		idx2 = rand() % 25;
-		iTemp = iAINumber[idx1];
-		iAINumber[idx1] = iAINumber[idx2];
-		iAINumber[idx2] = iTemp;
+		iTemp = iNumber[idx1];
+		iNumber[idx1] = iNumber[idx2];
+		iNumber[idx2] = iTemp;
 
 		//AI 빙고판
 		idx1 = rand() % 25;
@@ -241,7 +242,7 @@ int main() {
 			//왼쪽 ->오른쪽 대각선 체크
 			iStarCount = 0;
 			for (int i = 0; i < 25; i += 6) {
-				if (iAINumber[i] = INT_MAX)
+				if (iAINumber[i] == INT_MAX)
 					++iStarCount;
 			}
 			if (iStarCount < 5 && iSaveCount < iStarCount) {
@@ -251,7 +252,7 @@ int main() {
 			//오른쪽 ->왼쪽 대각선 체크
 			iStarCount = 0;
 			for (int i = 4; i <= 20; i += 4) {
-				if (iAINumber[i] = INT_MAX)
+				if (iAINumber[i] == INT_MAX)
 					++iStarCount;
 			}
 			if (iStarCount < 5 && iSaveCount < iStarCount) {
@@ -260,9 +261,47 @@ int main() {
 			}
 			//모든 라인을 조사했으면 iLine에 가능성이 가장 높은 줄 번호가 저장됨.
 			//그 줄에 있는 *이 아닌 숫자중 하나를 선택하게 한다.
-
-
-
+			
+			//가로줄일 경우
+			if (iLine <= LN_H5) {
+				//가로줄일 경우 iLine이 0~4 사이의 값이다.
+				for (int i = 0; i < 5; ++i) {
+					// 현재 줄에서 *이 아닌 숫자를 찾아낸다.
+					if (iAINumber[iLine * 5 + i] != INT_MAX) {
+						iInput = iAINumber[iLine * 5 + i];
+						break;
+					}
+				}
+			}
+			//세로줄일 경우
+			else if (iLine <= LN_V5) {
+				//가로줄일 경우 iLine이 5~9 사이의 값이다
+				for (int i = 0; i < 5; ++i) {
+					//마찬가지로 현재 줄에서 *이 아닌 숫자를 찾아낸다.
+					if (iAINumber[i* 5 + (iLine-5)] != INT_MAX) {
+						iInput = iAINumber[i * 5 + (iLine - 5)];
+						break;
+					}
+				}
+			}
+			//정방향 대각선일 경우
+			else if (iLine == LN_LT) {
+				for (int i = 0; i < 25; i += 6) {
+					if (iAINumber[i] != INT_MAX) {
+						iInput = iAINumber[i];
+						break;
+					}
+				}
+			}
+			//역방향 대각선일 경우
+			else if (iLine == LN_RT) {
+				for (int i = 4; i <= 20; i +=4) {
+					if (iAINumber[i] != INT_MAX) {
+						iInput = iAINumber[i];
+						break;
+					}
+				}
+			}
 			break;
 		}
 		//AI가 숫자를 선택했으므로 플레이어와 AI의 숫자를 *로 바꿔준다.
@@ -350,4 +389,4 @@ int main() {
 	}
 	return 0;
 }
-
+*/

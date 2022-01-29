@@ -33,8 +33,8 @@ int main() {
 		idx1 = rand() % 25;
 		idx2 = rand() % 25;
 		iTemp = iAINumber[idx1];
-		iAINumber[idx1] = iAINumber[idx2];
-		iAINumber[idx2] = iTemp;
+		iNumber[idx1] = iNumber[idx2];
+		iNumber[idx2] = iTemp;
 
 		//AI 빙고판
 		idx1 = rand() % 25;
