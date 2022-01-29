@@ -1,22 +1,22 @@
-/*
+ï»¿/*
 20 Lecture (Structure and String Function)
 */
-
+/*
 #include <iostream>
 
 using namespace std;
 
-//»çÀÌÁî´Â º¯¼ö°¡¾Æ´Ñ »ó¼ö·Î Á¤ÇØÁà¾ß À¯Áöº¸¼ö¿¡ ¿ëÀÌÇÏ±â¿¡ 
-//define ¸ÅÅ©·Î¸¦ »ç¿ëÇÏ¿© »ó¼ö·Î ÁöÁ¤
+//ì‚¬ì´ì¦ˆëŠ” ë³€ìˆ˜ê°€ì•„ë‹Œ ìƒìˆ˜ë¡œ ì •í•´ì¤˜ì•¼ ìœ ì§€ë³´ìˆ˜ì— ìš©ì´í•˜ê¸°ì— 
+//define ë§¤í¬ë¡œë¥¼ ì‚¬ìš©í•˜ì—¬ ìƒìˆ˜ë¡œ ì§€ì •
 #define NAME_SIZE 32 
 #define NO_SIZE 9
 
-// ±¸Á¶Ã¼ : °ü·ÃÀÖ´Â º¯¼öµéÀ» ¸ð¾Æ¼­ ÇÏ³ªÀÇ »õ·Î¿î Å¸ÀÔÀ» ¸¸µé¾îÁÖ´Â ±â´ÉÀÌ´Ù.
-// »ç¿ëÀÚÁ¤ÀÇ º¯¼ö Å¸ÀÔÀÌ´Ù.
-// ÇüÅÂ : struct ±¸Á¶Ã¼¸í {} : ÀÇ ÇüÅÂ·Î ±¸¼ºµÈ´Ù.
-// ¹è¿­°ú ±¸Á¶Ã¼ÀÇ °øÅëÁ¡ 
-//	1. µ¥ÀÌÅÍÀÇ ÁýÇÕ.
-//  2. ±¸Á¶Ã¼ ¸â¹öµéÀº ¿¬¼ÓµÈ ¸Þ¸ð¸® ºí·°¿¡ ÇÒ´çµÈ´Ù.
+// êµ¬ì¡°ì²´ : ê´€ë ¨ìžˆëŠ” ë³€ìˆ˜ë“¤ì„ ëª¨ì•„ì„œ í•˜ë‚˜ì˜ ìƒˆë¡œìš´ íƒ€ìž…ì„ ë§Œë“¤ì–´ì£¼ëŠ” ê¸°ëŠ¥ì´ë‹¤.
+// ì‚¬ìš©ìžì •ì˜ ë³€ìˆ˜ íƒ€ìž…ì´ë‹¤.
+// í˜•íƒœ : struct êµ¬ì¡°ì²´ëª… {} : ì˜ í˜•íƒœë¡œ êµ¬ì„±ëœë‹¤.
+// ë°°ì—´ê³¼ êµ¬ì¡°ì²´ì˜ ê³µí†µì  
+//	1. ë°ì´í„°ì˜ ì§‘í•©.
+//  2. êµ¬ì¡°ì²´ ë©¤ë²„ë“¤ì€ ì—°ì†ëœ ë©”ëª¨ë¦¬ ë¸”ëŸ­ì— í• ë‹¹ëœë‹¤.
 
 struct _tagStudent {
 	
@@ -32,60 +32,62 @@ struct _tagStudent {
 
 
 int main() {
-	//={}À¸·Î ÃÊ±âÈ­ ÇØÁÖÁö ¾ÊÀ¸¸é ¾²·¹±â°ªÀÌ µé¾î°¡ÀÖÀ½.
+	//={}ìœ¼ë¡œ ì´ˆê¸°í™” í•´ì£¼ì§€ ì•Šìœ¼ë©´ ì“°ë ˆê¸°ê°’ì´ ë“¤ì–´ê°€ìžˆìŒ.
 	_tagStudent tStudent = {};
 	_tagStudent tStudentArr[100] = {}; // 52byte *100  =5200byte
 
-	//±¸Á¶Ã¼ ¸â¹ö¿¡ Á¢±ÙÇÒ¶§´Â " . " À» ÀÌ¿ëÇØ¼­ Á¢±ÙÇÏ°Ô µÈ´Ù.
+	//êµ¬ì¡°ì²´ ë©¤ë²„ì— ì ‘ê·¼í• ë•ŒëŠ” " . " ì„ ì´ìš©í•´ì„œ ì ‘ê·¼í•˜ê²Œ ëœë‹¤.
 
 	tStudent.iKor = 100;
 
-	//tStudent.strName = "asdkfasfsd";(ºÒ°¡´É)
-	// ¹®ÀÚ¿­À» ¹è¿­¿¡ ³Ö¾îÁÙ ¶§¿¡´Â ´Ü¼ø ´ëÀÔÀ¸·Î´Â ºÒ°¡´ÉÇÏ´Ù.
-	// strcpy_s ¶ó´Â ÇÔ¼ö¸¦ ÀÌ¿ëÇØ¼­ ¹®ÀÚ¿­À» º¹»çÇØ ÁÖ¾î¾ßÇÑ´Ù.
-	// strcpy_s ÇÔ¼ö´Â ¿À¸¥ÂÊ¿¡ ÀÖ´Â ¹®ÀÚ¿­À» ¿ÞÂÊÀ¸·Î º¹»çÇØÁÜ.
-	//strcpy_s(tStudent.strName, "°¡³ª´Ù¶ó asdf");
+	//tStudent.strName = "asdkfasfsd";(ë¶ˆê°€ëŠ¥)
+	// ë¬¸ìžì—´ì„ ë°°ì—´ì— ë„£ì–´ì¤„ ë•Œì—ëŠ” ë‹¨ìˆœ ëŒ€ìž…ìœ¼ë¡œëŠ” ë¶ˆê°€ëŠ¥í•˜ë‹¤.
+	// strcpy_s ë¼ëŠ” í•¨ìˆ˜ë¥¼ ì´ìš©í•´ì„œ ë¬¸ìžì—´ì„ ë³µì‚¬í•´ ì£¼ì–´ì•¼í•œë‹¤.
+	// strcpy_s í•¨ìˆ˜ëŠ” ì˜¤ë¥¸ìª½ì— ìžˆëŠ” ë¬¸ìžì—´ì„ ì™¼ìª½ìœ¼ë¡œ ë³µì‚¬í•´ì¤Œ.
+	//strcpy_s(tStudent.strName, "ê°€ë‚˜ë‹¤ë¼ asdf");
 
-	// ¹®ÀÚ¿­ÀÇ ³¡Àº Ç×»ó 0(NULL)·Î ³¡³ª¾ß ÇÔ. 
-	// µû¶ó¼­ °¢ ¹è¿­ ¿ä¼Ò¿¡ °ªÀ» ³Ö¾îÁÖ°Ô µÇ¸é ±× °ªÀº Ãâ·ÂµÇ³ª,
+	// ë¬¸ìžì—´ì˜ ëì€ í•­ìƒ 0(NULL)ë¡œ ëë‚˜ì•¼ í•¨. 
+	// ë”°ë¼ì„œ ê° ë°°ì—´ ìš”ì†Œì— ê°’ì„ ë„£ì–´ì£¼ê²Œ ë˜ë©´ ê·¸ ê°’ì€ ì¶œë ¥ë˜ë‚˜,
 	// ex) tStudent.strName[0]= 'a';tStudent.strName[1]= 'b'; 
-	// ³Ö¾îÁÖÁö ¾ÊÀº ºÎºÐÀº ¹®ÀÚ¿­ÀÇ ³¡À» ÀÎ½ÄÇÒ ¼ö ¾ø±â ¶§¹®¿¡ ¾²·¹±â°ªÀ¸·Î Ãâ·ÂÀÌ µÈ´Ù.
-	// °¢ ¹è¿­ ¿ä¼Ò¿¡ °ªÀ» ³Ö¾î Á¤»óÀûÀ¸·Î Ãâ·ÂÇÏ±â À§ÇØ¼­´Â
-	// ¸¶Áö¸· ¿ä¼Ò¿¡ 0(NULL)À» ³Ö¾îÁÖ¸é µÈ´Ù.
+	// ë„£ì–´ì£¼ì§€ ì•Šì€ ë¶€ë¶„ì€ ë¬¸ìžì—´ì˜ ëì„ ì¸ì‹í•  ìˆ˜ ì—†ê¸° ë•Œë¬¸ì— ì“°ë ˆê¸°ê°’ìœ¼ë¡œ ì¶œë ¥ì´ ëœë‹¤.
+	// ê° ë°°ì—´ ìš”ì†Œì— ê°’ì„ ë„£ì–´ ì •ìƒì ìœ¼ë¡œ ì¶œë ¥í•˜ê¸° ìœ„í•´ì„œëŠ”
+	// ë§ˆì§€ë§‰ ìš”ì†Œì— 0(NULL)ì„ ë„£ì–´ì£¼ë©´ ëœë‹¤.
 	// ex) tStudent.strName[2]= 0;
-	//strcpy_s ÇÔ¼ö´Â ¸¶Áö¸·¿¡ ÀÚµ¿À¸·Î 0À» »ðÀÔÇÑ´Ù.
-	strcpy_s(tStudent.strName, "°¡³ª´Ù¶ó asdf");
+	//strcpy_s í•¨ìˆ˜ëŠ” ë§ˆì§€ë§‰ì— ìžë™ìœ¼ë¡œ 0ì„ ì‚½ìž…í•œë‹¤.
+	strcpy_s(tStudent.strName, "ê°€ë‚˜ë‹¤ë¼ asdf");
 	strcpy_s(tStudent.strNo, "20150979");
 
-	//strcat_s ÇÔ¼ö´Â ¹®ÀÚ¿­À» ºÙ¿©ÁÖ´Â ±â´ÉÀÌ´Ù.
-	//¿À¸¥Á·¿¡ ÀÖ´Â ¹®ÀÚ¿­À» ¿ÞÂÊ¿¡ ºÙ¿©ÁØ´Ù. strName¿¡´Â À§¿¡¼­
-	//°¡³ª´Ù¶ó asdf ¸¦ ÀúÀåÇØ µÎ¾ú±â ¶§¹®¿¡ ÀÌ µÚ¿¡ ¿À¸¥ÂÊ ¹®ÀÚ¿­À» ºÙ¿©¼­ ¸¸µé¾îÁØ´Ù.
-	strcat_s(tStudent.strName, " ¹®ÀÚ¿­ ºÙÀÌ±â");
+	//strcat_s í•¨ìˆ˜ëŠ” ë¬¸ìžì—´ì„ ë¶™ì—¬ì£¼ëŠ” ê¸°ëŠ¥ì´ë‹¤.
+	//ì˜¤ë¥¸ì¡±ì— ìžˆëŠ” ë¬¸ìžì—´ì„ ì™¼ìª½ì— ë¶™ì—¬ì¤€ë‹¤. strNameì—ëŠ” ìœ„ì—ì„œ
+	//ê°€ë‚˜ë‹¤ë¼ asdf ë¥¼ ì €ìž¥í•´ ë‘ì—ˆê¸° ë•Œë¬¸ì— ì´ ë’¤ì— ì˜¤ë¥¸ìª½ ë¬¸ìžì—´ì„ ë¶™ì—¬ì„œ ë§Œë“¤ì–´ì¤€ë‹¤.
+	strcat_s(tStudent.strName, " ë¬¸ìžì—´ ë¶™ì´ê¸°");
 
-	//strcmp ÇÔ¼ö´Â µÎ ¹®ÀÚ¿­À» ºñ±³ÇÏ¿© °°À» °æ¿ì 0À» ¹ÝÈ¯ÇÏ°í 
-	//´Ù¸¥°æ¿ì 0ÀÌ ¾Æ´Ñ °ªÀ» ¹ÝÈ¯ÇÑ´Ù.
-	strcpy_s(tStudent.strName, "È«±æµ¿");
+	//strcmp í•¨ìˆ˜ëŠ” ë‘ ë¬¸ìžì—´ì„ ë¹„êµí•˜ì—¬ ê°™ì„ ê²½ìš° 0ì„ ë°˜í™˜í•˜ê³  
+	//ë‹¤ë¥¸ê²½ìš° 0ì´ ì•„ë‹Œ ê°’ì„ ë°˜í™˜í•œë‹¤.
+	strcpy_s(tStudent.strName, "í™ê¸¸ë™");
 
-	cout << "ºñ±³ÇÒ ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä : ";
+	cout << "ë¹„êµí•  ì´ë¦„ì„ ìž…ë ¥í•˜ì„¸ìš” : ";
 	char strName[NAME_SIZE] = {};
 	cin >> strName;
 	if (strcmp(tStudent.strName, strName) == 0) {
-		cout << " ÇÐ»ýÀ» Ã£¾Ò½À´Ï´Ù. " << endl;
+		cout << " í•™ìƒì„ ì°¾ì•˜ìŠµë‹ˆë‹¤. " << endl;
 	}
 	else {
-		cout << "Ã£´Â ÇÐ»ýÀÌ ¾ø½À´Ï´Ù. " << endl;
+		cout << "ì°¾ëŠ” í•™ìƒì´ ì—†ìŠµë‹ˆë‹¤. " << endl;
 	}
 
 
-	//strlen ÇÔ¼ö´Â ÀÎÀÚÀÇ ±æÀÌ¸¦ ±¸ÇØÁØ´Ù.
-	cout << "ÀÌ¸§±æÀÌ : " << strlen(tStudent.strName) << endl;
-	cout << "ÀÌ¸§ : " << tStudent.strName << endl;
-	cout << "ÇÐ¹ø : " << tStudent.strNo << endl;
-	cout << "±¹¾î : " << tStudent.iKor << endl;
-	cout << "¿µ¾î : " << tStudent.iEng << endl;
-	cout << "¼öÇÐ : " << tStudent.iMath << endl;
-	cout << "ÃÑÁ¡ : " << tStudent.iTotal << endl;
-	cout << "Æò±Õ : " << tStudent.fAvg << endl;
+	//strlen í•¨ìˆ˜ëŠ” ì¸ìžì˜ ê¸¸ì´ë¥¼ êµ¬í•´ì¤€ë‹¤.
+	cout << "ì´ë¦„ê¸¸ì´ : " << strlen(tStudent.strName) << endl;
+	cout << "ì´ë¦„ : " << tStudent.strName << endl;
+	cout << "í•™ë²ˆ : " << tStudent.strNo << endl;
+	cout << "êµ­ì–´ : " << tStudent.iKor << endl;
+	cout << "ì˜ì–´ : " << tStudent.iEng << endl;
+	cout << "ìˆ˜í•™ : " << tStudent.iMath << endl;
+	cout << "ì´ì  : " << tStudent.iTotal << endl;
+	cout << "í‰ê·  : " << tStudent.fAvg << endl;
 
 	return 0;
 }
+
+*/
