@@ -142,6 +142,7 @@
     <ClCompile Include="Homework1.cpp" />
     <ClCompile Include="Homework2.cpp" />
     <ClCompile Include="Homework3.cpp" />
+    <ClCompile Include="Homework4.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main2.cpp" />
     <ClCompile Include="main3.cpp" />
