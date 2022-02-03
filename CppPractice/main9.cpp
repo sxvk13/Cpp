@@ -1,7 +1,7 @@
 /*
 	21 Lecture ( Student Management Program)
 */
-
+/*
 #include <iostream>
 
 using namespace std;
@@ -44,6 +44,7 @@ int main() {
 	//배열에 추가된 개수를 저장할 변수를 만들어줌.
 	int iStudentCount = 0;
 	int iStdNumber = 1;
+	char strSearchName[NAME_SIZE] = {};
 	while (true) {
 		system("cls");
 		cout << "==================학생관리 프로그램==================" << endl<<endl;
@@ -164,9 +165,63 @@ int main() {
 
 			break;
 		case MENU_DELETE:
-				
+			system("cls");
+			cout << "==================학생 삭제==================" << endl << endl;
+			//char strSearchName[NAME_SIZE] = {};
+			//switch 내부에 변수를 선언과 동시에 초기화 할 수 없음.
+			cin.ignore(1024, '\n');
+			cout << "삭제할 이름을 입력하세요 : ";
+			cin.getline(strSearchName, NAME_SIZE);
+
+			//등록되어있는 학생 수만큼 반복하며 학생을 찾음.
+			for (int i = 0; i < iStudentCount; ++i) {
+				//학생을 찾았을 경우
+				if (strcmp(tStudentArr[i].strName, strSearchName) == 0) {
+					//찾은 학생의 인덱스가 마지막일 경우
+					if (i == iStudentCount - 1) {
+						//해당 인덱스를 초기화
+						tStudentArr[i] = {};
+						cout << "삭제되었습니다." << endl << endl;
+					}
+					//인덱스가 마지막이 아닌 경우
+					else {
+						//해당 인덱스 부터 시작하여 한칸씩 덮어 씌움
+						for (int j = i; j < iStudentCount-1; ++j) {
+							tStudentArr[j] = tStudentArr[j + 1];
+						}
+						cout << "삭제되었습니다." << endl << endl;
+					}
+					--iStudentCount;
+					break;
+				}
+			}
 			break;
 		case MENU_SEARCH:
+			system("cls");
+			cout << "==================학생 탐색==================" << endl << endl;
+			//char strSearchName[NAME_SIZE] = {};
+			//switch 내부에 변수를 선언과 동시에 초기화 할 수 없음.
+			cin.ignore(1024, '\n');
+			cout << "탐색할 이름을 입력하세요 : ";
+			cin.getline(strSearchName, NAME_SIZE);
+
+			//등록되어있는 학생 수만큼 반복하며 학생을 찾음.
+			for (int i = 0; i < iStudentCount; ++i) {
+				//학생을 찾았을 경우
+				if (strcmp(tStudentArr[i].strName, strSearchName) == 0) {
+					cout << "이름 : " << tStudentArr[i].strName << endl;
+					cout << "전화번호 : " << tStudentArr[i].strPhoneNumber << endl;
+					cout << "주소 : " << tStudentArr[i].strAddress << endl;
+					cout << "학번 : " << tStudentArr[i].iNumber << endl;
+					cout << "국어 : " << tStudentArr[i].iKor << endl;
+					cout << "영어 : " << tStudentArr[i].iEng << endl;
+					cout << "수학 : " << tStudentArr[i].iMath << endl;
+					cout << "총점 : " << tStudentArr[i].iTotal << endl;
+					cout << "평균 : " << tStudentArr[i].fAvg << endl;
+					cout << "---------------------------------" << endl << endl;
+					break;
+				}
+			}
 			break;
 		case MENU_OUPUT:
 			system("cls");
@@ -201,3 +256,4 @@ int main() {
 	return 0;
 
 }
+*/
