@@ -12,6 +12,7 @@
 
  My Source
  */
+/*
 #include <iostream>
 
 using namespace std;
@@ -36,7 +37,6 @@ enum BookMenu {
 
 int main() {
 	_tagBook tBookArr[BOOK_MAX] = {};
-	int iSelectMenu;
 	int iBookCount = 0;
 	int iBookNumber = 1;
 	char strBook[BOOK_NAME] = {};
@@ -50,6 +50,7 @@ int main() {
 		cout << "4.책 목록 " << endl; 
 		cout << "5.종료 " << endl << endl;
 		cout << "메뉴를 선택해 주세요 : ";
+		int iSelectMenu;
 		cin >> iSelectMenu;
 		if (cin.fail()) {
 			cin.clear();
@@ -146,3 +147,4 @@ int main() {
 
 	return 0;
 }
+*/
