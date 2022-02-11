@@ -109,7 +109,7 @@ struct _tagPlayer {
 	int		iMPMax;
 	int		iExp; //현재 경험치
 	int		iLevel;
-	_tagInventory tInvertory;
+	_tagInventory tInventory;
 };
 
 struct _tagMonster {
@@ -164,9 +164,9 @@ int main() {
 	tPlayer.iLevel = 1;
 	tPlayer.iExp = 0;
 	tPlayer.eJob = (JOB)iJob;
-	tPlayer.tInvertory.iGold = 10000;
-	tPlayer.tInvertory.iItemCount = 0;
-	tPlayer.tInvertory.tItem[INVENTORY_MAX - 1] = {};
+	tPlayer.tInventory.iGold = 10000;
+	tPlayer.tInventory.iItemCount = 0;
+	tPlayer.tInventory.tItem[INVENTORY_MAX - 1] = {};
 
 	//위에서 직업을 선택함과 동시에 범위를 한정하였기때문에
 	//해당 switch문에서 default 값을 설정해줄 필요가 없음.
@@ -389,7 +389,7 @@ int main() {
 						tPlayer.iArmorMax << endl;
 					cout << "체력 : " << tPlayer.iHP << " / " << tPlayer.iHPMax <<
 						"\t마력 : " << tPlayer.iMP << " / " << tPlayer.iMPMax << endl;
-					cout << "보유 골드 : " << tPlayer.tInvertory.iGold << " Gold " << endl << endl;
+					cout << "보유 골드 : " << tPlayer.tInventory.iGold << " Gold " << endl << endl;
 
 					//몬스터 정보 출력.
 
@@ -450,7 +450,7 @@ int main() {
 							tPlayer.iExp += tMonster.iExp;
 							int iGold = (rand() % (tMonster.iGoldMax - tMonster.iGoldMin + 1)
 								+ tMonster.iGoldMin);
-							tPlayer.tInvertory.iGold += iGold;
+							tPlayer.tInventory.iGold += iGold;
 
 							cout << tMonster.iExp << "경험치를 획득하였습니다. " << endl;
 							cout << iGold << " Gold를 획득하였습니다." << endl;
@@ -485,10 +485,10 @@ int main() {
 							cout << tPlayer.strName << " Player가 사망하였습니다." << endl;
 
 							int iExp = tPlayer.iExp * 0.1f;
-							int iGold = tPlayer.tInvertory.iGold * 0.1f;
+							int iGold = tPlayer.tInventory.iGold * 0.1f;
 
 							tPlayer.iExp -= iExp;
-							tPlayer.tInvertory.iGold -= iGold;
+							tPlayer.tInventory.iGold -= iGold;
 
 							cout << iExp << " 의 경험치를 잃었습니다. " << endl;
 							cout << iGold << " 의 Gold를 잃었습니다." << endl;
@@ -539,6 +539,9 @@ int main() {
 						cout << WL_BOW << ". " << tStoreWeapon[1].strName << endl;
 						cout << WL_STAFF << ". " << tStoreWeapon[2].strName << endl;
 						cout << WL_BACK << ". " << "뒤로가기" << endl << endl;
+						
+						cout << "가방남은 공간 : " << INVENTORY_MAX-tPlayer.tInventory.iItemCount << "칸" << endl;
+
 						cout << "선택해 주세요 : ";
 
 						cin >> iAction;
@@ -550,14 +553,16 @@ int main() {
 						}
 						else if (iAction == WL_BACK)
 							break;
+
+
 						//현재 Player의 소지 금액이 아이템의 가격보다 작을경우 구입불가
 						//현재 Player의 인벤토리가 꽉 찼을 경우 구입 불가
-						if (tPlayer.tInvertory.iGold < tStoreWeapon[iAction - 1].iPrice) {
+						if (tPlayer.tInventory.iGold < tStoreWeapon[iAction - 1].iPrice) {
 							cout << endl << "구매 불가! (소지금 부족.)"  << endl << endl;
 							system("pause");
 							continue;
 						}
-						else if (tPlayer.tInvertory.iItemCount == INVENTORY_MAX) {
+						else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
 							cout << endl << "구매 불가! (인벤토리 부족.)" << endl << endl;
 							system("pause");
 							continue;
@@ -565,20 +570,23 @@ int main() {
 						else {
 							switch (iAction) {
 							case WL_SWORD:
-								tPlayer.tInvertory.tItem[tPlayer.tInvertory.iItemCount] = tStoreWeapon[0];
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount] = tStoreWeapon[0];
 								break;
 							case WL_BOW:
-								tPlayer.tInvertory.tItem[tPlayer.tInvertory.iItemCount] = tStoreWeapon[1];
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount] = tStoreWeapon[1];
 								break;
 							case WL_STAFF:
-								tPlayer.tInvertory.tItem[tPlayer.tInvertory.iItemCount] = tStoreWeapon[2];
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount] = tStoreWeapon[2];
 								break;
 							default:
 								continue;
 							}
-							tPlayer.tInvertory.iGold -= tStoreWeapon[iAction - 1].iPrice;
-							++tPlayer.tInvertory.iItemCount;
+						
+							//골드 차감
+							tPlayer.tInventory.iGold -= tStoreWeapon[iAction - 1].iPrice;
+							++tPlayer.tInventory.iItemCount;
 							cout << endl <<tStoreWeapon[iAction-1].strName <<" 구매 완료!" << endl << endl;
+
 							system("pause");
 						}
 
@@ -592,6 +600,9 @@ int main() {
 						cout << AL_BODY << ". " << tStoreArmor[1].strName << endl;
 						cout << AL_FOOT << ". " << tStoreArmor[2].strName << endl;
 						cout << AL_BACK << ". " << "뒤로가기" << endl << endl;
+						
+						cout << "가방남은 공간 : " << INVENTORY_MAX - tPlayer.tInventory.iItemCount << "칸" << endl;
+
 						cout << "선택해 주세요 : ";
 
 						cin >> iAction;
@@ -605,12 +616,12 @@ int main() {
 							break;
 						//현재 Player의 소지 금액이 아이템의 가격보다 작을경우 구입불가
 						//현재 Player의 인벤토리가 꽉 찼을 경우 구입 불가
-						if (tPlayer.tInvertory.iGold < tStoreArmor[iAction - 1].iPrice) {
+						if (tPlayer.tInventory.iGold < tStoreArmor[iAction - 1].iPrice) {
 							cout << endl << "구매 불가! (소지금 부족.)" << endl;
 							system("pause");
 							continue;
 						}
-						else if (tPlayer.tInvertory.iItemCount == INVENTORY_MAX) {
+						else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
 							cout << endl << "구매 불가! (인벤토리 부족.)" << endl;
 							system("pause");
 							continue;
@@ -618,19 +629,19 @@ int main() {
 						else {
 							switch (iAction) {
 							case AL_HEAD:
-								tPlayer.tInvertory.tItem[tPlayer.tInvertory.iItemCount] = tStoreArmor[0];
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount] = tStoreArmor[0];
 								break;
 							case AL_BODY:
-								tPlayer.tInvertory.tItem[tPlayer.tInvertory.iItemCount] = tStoreArmor[1];
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount] = tStoreArmor[1];
 								break;
 							case AL_FOOT:
-								tPlayer.tInvertory.tItem[tPlayer.tInvertory.iItemCount] = tStoreArmor[2];
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount] = tStoreArmor[2];
 								break;
 							default:
 								continue;
 							}
-							tPlayer.tInvertory.iGold -= tStoreArmor[iAction - 1].iPrice;
-							++tPlayer.tInvertory.iItemCount;
+							tPlayer.tInventory.iGold -= tStoreArmor[iAction - 1].iPrice;
+							++tPlayer.tInventory.iItemCount;
 							cout << endl << tStoreArmor[iAction - 1].strName << " 구매 완료!" << endl << endl;
 							system("pause");
 						}
@@ -645,8 +656,33 @@ int main() {
 		case MM_INVENTORY:
 			system("cls");
 				cout << "**********************가방**********************" << endl << endl;
-				for (int i = 0; i < tPlayer.tInvertory.iItemCount; ++i){
-					cout <<i+1<< ". " << tPlayer.tInvertory.tItem[i].strName << endl;
+				cout << "[ 정보 ] " << endl << endl;
+				cout << "이름 : " << tPlayer.strName << "\t직업 :" <<
+					tPlayer.strJobName << endl;
+				cout << "레벨 : " << tPlayer.iLevel << "\t경험치 :" <<
+					tPlayer.iExp << endl;
+				cout << "공격력 : " << tPlayer.iAttackMin << " - " <<
+					tPlayer.iAttackMax << "\t방어력 : " << tPlayer.iArmorMin << " - " <<
+					tPlayer.iArmorMax << endl;
+				cout << "체력 : " << tPlayer.iHP << " / " << tPlayer.iHPMax <<
+					"\t마력 : " << tPlayer.iMP << " / " << tPlayer.iMPMax << endl;
+				cout << "보유 골드 : " << tPlayer.tInventory.iGold << " Gold " << endl << endl << endl;
+
+
+				for (int i = 0; i < tPlayer.tInventory.iItemCount; ++i){
+					cout <<i+1<< ". 이름: " << tPlayer.tInventory.tItem[i].strName <<
+						"\t 종류 : "<<tPlayer.tInventory.tItem[i].strTypeName<<endl;
+					if (tPlayer.tInventory.tItem[i].eType == ITEM_WEAPON) {
+						cout << "공격력 : " << tPlayer.tInventory.tItem[i].iMin << " - " <<
+							tPlayer.tInventory.tItem[i].iMax << endl;
+					}
+					else if (tPlayer.tInventory.tItem[i].eType == ITEM_ARMOR) {
+						cout << "방어력 : " << tPlayer.tInventory.tItem[i].iMin << " - " <<
+							tPlayer.tInventory.tItem[i].iMax << endl;
+					}
+					cout << "판매 가격 : " << tPlayer.tInventory.tItem[i].iSell <<
+						"\t 구매 가격 : " << tPlayer.tInventory.tItem[i].iPrice << endl;
+					cout << "설명 : " << tPlayer.tInventory.tItem[i].strDesc << endl;
 				}
 				cout << endl;
 				system("pause");
