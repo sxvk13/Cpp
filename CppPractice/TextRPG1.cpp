@@ -391,9 +391,31 @@ int main() {
 						tPlayer.strJobName << endl;
 					cout << "레벨 : " << tPlayer.iLevel << "\t경험치 :" <<
 						tPlayer.iExp << endl;
-					cout << "공격력 : " << tPlayer.iAttackMin << " - " <<
-						tPlayer.iAttackMax << "\t방어력 : " << tPlayer.iArmorMin << " - " <<
-						tPlayer.iArmorMax << endl;
+					// 무기를 장착하고  있을 경우 공격력에 무기 공격력을 추가하여 출력.
+
+					if (tPlayer.bEquip[EQ_WEAPON] == true) {
+						cout << "공격력 : " << tPlayer.iAttackMin << " + " <<
+							tPlayer.tEquip[EQ_WEAPON].iMin << " - " <<
+							tPlayer.iAttackMax << " + " << tPlayer.tEquip[EQ_WEAPON].iMax;
+					}
+					else {
+
+						cout << "공격력 : " << tPlayer.iAttackMin << " - " <<
+							tPlayer.iAttackMax;
+					}
+
+					//방어구를 장착하고 있을 경우 방어력에 방어구 방어구 방여력방어력을 추가하여 출려
+
+					if (tPlayer.bEquip[EQ_ARMOR] == true) {
+						cout << "\t방어력 : " << tPlayer.iArmorMax << " + " <<
+							tPlayer.tEquip[EQ_ARMOR].iMin << " - " <<
+							tPlayer.iArmorMax << " + " << tPlayer.tEquip[EQ_ARMOR].iMax << endl;
+					}
+					else {
+
+						cout << "\t방어력 : " << tPlayer.iArmorMin << " - " <<
+							tPlayer.iArmorMax << endl;
+					}
 					cout << "체력 : " << tPlayer.iHP << " / " << tPlayer.iHPMax <<
 						"\t마력 : " << tPlayer.iMP << " / " << tPlayer.iMPMax << endl;
 					cout << "보유 골드 : " << tPlayer.tInventory.iGold << " Gold " << endl << endl;
@@ -435,8 +457,18 @@ int main() {
 						//예를 들어 Min 5 Max 15 라고 가정할 경우
 						// 15 - 5 +1 을 하면 11 이 되고, 11로 나눈 나머지는 0~10이 나옴.
 						// 여기에 Min값인 5를 더하게 되면 5~15 사이로 값이 나오게 된다.
-						int iAttack = rand() % (tPlayer.iAttackMax - tPlayer.iAttackMin + 1) +
-							tPlayer.iAttackMin;
+						int iAttackMin = tPlayer.iArmorMin;
+						int iAttackMax = tPlayer.iAttackMax;
+
+						//무기를장착하고 있을 경우 무기와 Min , Max를 더해준다
+						if (tPlayer.bEquip[EQ_WEAPON]) {
+							iAttackMin += tPlayer.tEquip[EQ_WEAPON].iMin;
+							iAttackMax += tPlayer.tEquip[EQ_WEAPON].iMax;
+						}
+
+						
+						int iAttack = rand() % (iAttackMax - iAttackMin + 1) +
+							iAttackMin;
 						int iArmor = rand() % (tMonster.iArmorMax - tMonster.iArmorMin + 1) +
 							tMonster.iArmorMin;
 						//최소 데미지 설정
@@ -474,8 +506,18 @@ int main() {
 						// 몬스터가 살아있다면 플레이어를 공격한다.
 						iAttack = rand() % (tMonster.iAttackMax - tMonster.iAttackMin + 1) +
 							tMonster.iAttackMin;
-						iArmor = rand() % (tPlayer.iArmorMax - tPlayer.iArmorMin + 1) +
-							tPlayer.iArmorMin;
+
+						int iArmorMin = tPlayer.iArmorMin;
+						int iArmorMax = tPlayer.iArmorMax;
+
+						if (tPlayer.bEquip[EQ_ARMOR]) {
+							iArmorMin += tPlayer.tEquip[EQ_ARMOR].iMin;
+							iArmorMax += tPlayer.tEquip[EQ_ARMOR].iMax;
+						}
+
+
+						iArmor = rand() % (iArmorMax - iArmorMin + 1) +
+							iArmorMin;
 						//최소 데미지 설정
 						//int iDamage = ((iAttack - iArmor)<1)?1:(iAttack-iArmor);
 						iDamage = iAttack - iArmor;
@@ -662,18 +704,55 @@ int main() {
 			break;
 		case MM_INVENTORY:
 			while (true) {
-			system("cls");
-					cout << "**********************가방**********************" << endl << endl;
-					cout << "[ 정보 ] " << endl << endl;
-					cout << "이름 : " << tPlayer.strName << "\t직업 :" <<
-						tPlayer.strJobName << endl;
-					cout << "레벨 : " << tPlayer.iLevel << "\t경험치 :" <<
-						tPlayer.iExp << endl;
+				system("cls");
+				cout << "**********************가방**********************" << endl << endl;
+				cout << "[ 정보 ] " << endl << endl;
+				cout << "이름 : " << tPlayer.strName << "\t직업 :" <<
+					tPlayer.strJobName << endl;
+				cout << "레벨 : " << tPlayer.iLevel << "\t경험치 :" <<
+					tPlayer.iExp << endl;
+				// 무기를 장착하고  있을 경우 공격력에 무기 공격력을 추가하여 출력.
+
+				if (tPlayer.bEquip[EQ_WEAPON] == true) {
+					cout << "공격력 : " << tPlayer.iAttackMin << " + " <<
+						tPlayer.tEquip[EQ_WEAPON].iMin << " - " <<
+						tPlayer.iAttackMax << " + " << tPlayer.tEquip[EQ_WEAPON].iMax;
+				}else{
+
 					cout << "공격력 : " << tPlayer.iAttackMin << " - " <<
-						tPlayer.iAttackMax << "\t방어력 : " << tPlayer.iArmorMin << " - " <<
+						tPlayer.iAttackMax;
+				}
+				
+				//방어구를 장착하고 있을 경우 방어력에 방어구 방어구 방여력방어력을 추가하여 출려
+
+				if (tPlayer.bEquip[EQ_ARMOR] == true) {
+					cout << "\t방어력 : " << tPlayer.iArmorMax << " + " <<
+						tPlayer.tEquip[EQ_ARMOR].iMin << " - " <<
+						tPlayer.iArmorMax << " + " << tPlayer.tEquip[EQ_ARMOR].iMax << endl;
+				}
+				else {
+
+					cout << "\t방어력 : " << tPlayer.iArmorMin << " - " <<
 						tPlayer.iArmorMax << endl;
+				}
+
+					
 					cout << "체력 : " << tPlayer.iHP << " / " << tPlayer.iHPMax <<
 						"\t마력 : " << tPlayer.iMP << " / " << tPlayer.iMPMax << endl;
+
+
+					if (tPlayer.bEquip[EQ_WEAPON]) {
+						cout << "장착무기 : " << tPlayer.tEquip[EQ_WEAPON].strName;
+					}
+					else
+						cout << "장작무기 : 없음";
+					if (tPlayer.bEquip[EQ_ARMOR]) {
+						cout << "\t장착방어구 : " << tPlayer.tEquip[EQ_ARMOR].strName << endl;
+					}
+					else {
+						cout << "\t장착방어구 :없음"<<endl;
+					}
+
 					cout << "보유 골드 : " << tPlayer.tInventory.iGold << " Gold " << endl << endl << endl;
 
 
