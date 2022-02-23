@@ -10,6 +10,7 @@
 * TextRPG5 아이템 장착
 * TextRPG7 레벨업 시스템 + 성장 능력치
 */
+/*
 #include <iostream>
 #include <time.h>
 
@@ -934,3 +935,4 @@ int main() {
 	}
 	return 0;
 }
+*/
