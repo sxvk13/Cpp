@@ -1,2 +1,3 @@
-﻿  Pointer.cpp
-  CppPractice.vcxproj -> D:\source\repos\CppPractice\Debug\CppPractice.exe
+﻿  Function.cpp
+D:\source\repos\CppPractice\CppPractice\Function.cpp(47,13): error C2660: 'OutputText': 함수는 0개의 인수를 사용하지 않습니다.
+D:\source\repos\CppPractice\CppPractice\Function.cpp(29,6): message : 'OutputText' 선언을 참조하십시오.

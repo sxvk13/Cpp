@@ -1,6 +1,7 @@
 /*
 	Lecture 30~32 : Pointer 
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -165,3 +166,5 @@ int main() {
 
 	return 0;
 }
+
+*/
