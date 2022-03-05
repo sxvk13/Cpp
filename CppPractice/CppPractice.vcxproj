@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bingo(Function).cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Homework1.cpp" />
     <ClCompile Include="Homework2.cpp" />
