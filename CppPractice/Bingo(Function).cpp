@@ -2,7 +2,7 @@
 * Bingo game(Lecture Code) + AI Hard Mode + Function
 * 
 */
-
+/*
 #include <iostream>
 #include <time.h>
 #include <conio.h>
@@ -453,3 +453,4 @@ int BingoCountingRTD(int* pArray) {
 
 	return iBingo;
 }
+*/
