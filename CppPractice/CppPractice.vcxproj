@@ -156,6 +156,7 @@
     <ClCompile Include="main8.cpp" />
     <ClCompile Include="main9.cpp" />
     <ClCompile Include="Pointer.cpp" />
+    <ClCompile Include="TextRPG(Function).cpp" />
     <ClCompile Include="TextRPG1.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ExcludedFromBuild>
