@@ -1,2 +1,4 @@
 ﻿  TextRPG(Function).cpp
+D:\source\repos\CppPractice\CppPractice\TextRPG(Function).cpp(495,13): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\source\repos\CppPractice\CppPractice\TextRPG(Function).cpp(496,14): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CppPractice.vcxproj -> D:\source\repos\CppPractice\Debug\CppPractice.exe

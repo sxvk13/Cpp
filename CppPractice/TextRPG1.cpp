@@ -509,7 +509,7 @@ int main() {
 						//예를 들어 Min 5 Max 15 라고 가정할 경우
 						// 15 - 5 +1 을 하면 11 이 되고, 11로 나눈 나머지는 0~10이 나옴.
 						// 여기에 Min값인 5를 더하게 되면 5~15 사이로 값이 나오게 된다.
-						int iAttackMin = tPlayer.iArmorMin;
+						int iAttackMin = tPlayer.iAttackMin;
 						int iAttackMax = tPlayer.iAttackMax;
 
 						//무기를장착하고 있을 경우 무기와 Min , Max를 더해준다
