@@ -1,6 +1,7 @@
 /*
 	TexptRPG (Function ) Lecture Code
 */
+/*
 #include <iostream>
 #include <time.h>
 
@@ -920,3 +921,5 @@ int main(){
 	}
 	return 0;
 }
+
+*/
