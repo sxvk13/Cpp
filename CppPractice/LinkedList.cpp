@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 using namespace std;
 
 enum MAIN_MENU {
@@ -24,22 +24,22 @@ typedef struct _tagStudent {
 }STUDENT, *PSTUDENT;
 
 
-// ¸µÅ©µå¸®½ºÆ® : ÀÚ·á±¸Á¶ÀÇ ÇÑ Á¾·ùÀÌ´Ù. ÀÚ·á±¸Á¶¶õ µ¥ÀÌÅÍ¸¦ °ü¸®ÇÏ´Â ¹æ¹ıÀ» ¸»ÇÑ´Ù.
-// ¸µÅ©µå¸®½ºÆ®´Â µ¥ÀÌÅÍ ¸ñ·ÏÀ» ¿¬°á½ÃÄÑ¼­ Á¢±ÙÇÒ ¼ö ÀÖ´Â ±¸Á¶¸¦ Á¦°øÇÑ´Ù.
-// ¸µÅ©µå¸®½ºÆ®´Â µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ±â À§ÇÑ ³ëµå¶ó´Â °ÍÀÌ Á¸ÀçÇÑ´Ù. °¢ ³ëµåÀÇ Æ¯Â¡Àº
-// ´ÙÀ½ ³ëµå¸¦ ¾Ë ¼ö ÀÖ°Ô µÈ´Ù. ( ´ÙÀ½ ³ëµåÀÇ ¸Ş¸ğ¸® ÁÖ¼Ò¸¦ ÀúÀåÇÑ´Ù´Â ÀÇ¹Ì)
-// ¸®½ºÆ®´Â ¼±Çü±¸Á¶·Î µÇ¾îÀÖÀ¸¹Ç·Î ¹è¿­Ã³·³ Æ¯Á¤ ¿ä¼Ò¿¡ ¹Ù·Î Á¢±ÙÀÌ ºÒ°¡´ÉÇÏ´Ù.
-// ¹«Á¶°Ç ¾Õ¿¡¼­ºÎÅÍ Â÷·Ê´ë·Î Å¸°í µé¾î°¡¾ß ÇÑ´Ù.
-// ³ëµå¸¦ »õ·Î Ãß°¡ÇÒ ¶§´Â ³ëµå¸¦ »ı¼ºÇÏ°í ¸¶Áö¸· ³ëµå¿¡ ¿¬°á¸¸ ÇØÁÖ¸é µÇ±â ¶§¹®¿¡
-// °³¼öÀÇ Á¦ÇÑÀÌ ¾ø´Ù.
+// ë§í¬ë“œë¦¬ìŠ¤íŠ¸ : ìë£Œêµ¬ì¡°ì˜ í•œ ì¢…ë¥˜ì´ë‹¤. ìë£Œêµ¬ì¡°ë€ ë°ì´í„°ë¥¼ ê´€ë¦¬í•˜ëŠ” ë°©ë²•ì„ ë§í•œë‹¤.
+// ë§í¬ë“œë¦¬ìŠ¤íŠ¸ëŠ” ë°ì´í„° ëª©ë¡ì„ ì—°ê²°ì‹œì¼œì„œ ì ‘ê·¼í•  ìˆ˜ ìˆëŠ” êµ¬ì¡°ë¥¼ ì œê³µí•œë‹¤.
+// ë§í¬ë“œë¦¬ìŠ¤íŠ¸ëŠ” ë°ì´í„°ë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ ë…¸ë“œë¼ëŠ” ê²ƒì´ ì¡´ì¬í•œë‹¤. ê° ë…¸ë“œì˜ íŠ¹ì§•ì€
+// ë‹¤ìŒ ë…¸ë“œë¥¼ ì•Œ ìˆ˜ ìˆê²Œ ëœë‹¤. ( ë‹¤ìŒ ë…¸ë“œì˜ ë©”ëª¨ë¦¬ ì£¼ì†Œë¥¼ ì €ì¥í•œë‹¤ëŠ” ì˜ë¯¸)
+// ë¦¬ìŠ¤íŠ¸ëŠ” ì„ í˜•êµ¬ì¡°ë¡œ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë°°ì—´ì²˜ëŸ¼ íŠ¹ì • ìš”ì†Œì— ë°”ë¡œ ì ‘ê·¼ì´ ë¶ˆê°€ëŠ¥í•˜ë‹¤.
+// ë¬´ì¡°ê±´ ì•ì—ì„œë¶€í„° ì°¨ë¡€ëŒ€ë¡œ íƒ€ê³  ë“¤ì–´ê°€ì•¼ í•œë‹¤.
+// ë…¸ë“œë¥¼ ìƒˆë¡œ ì¶”ê°€í•  ë•ŒëŠ” ë…¸ë“œë¥¼ ìƒì„±í•˜ê³  ë§ˆì§€ë§‰ ë…¸ë“œì— ì—°ê²°ë§Œ í•´ì£¼ë©´ ë˜ê¸° ë•Œë¬¸ì—
+// ê°œìˆ˜ì˜ ì œí•œì´ ì—†ë‹¤.
 
-// ¸®½ºÆ® ³ëµå¸¦ ¸¸µç´Ù.
+// ë¦¬ìŠ¤íŠ¸ ë…¸ë“œë¥¼ ë§Œë“ ë‹¤.
 typedef struct _tagNode {
 	STUDENT		tStudent;
 	_tagNode*	pNext;
 }NODE, *PNODE;
 
-//¸®½ºÆ® ±¸Á¶Ã¼¸¦ ¸¸µé¾î ÁØ´Ù.
+//ë¦¬ìŠ¤íŠ¸ êµ¬ì¡°ì²´ë¥¼ ë§Œë“¤ì–´ ì¤€ë‹¤.
 typedef struct _tagList {
 	PNODE	pBegin;
 	PNODE	pEnd;
@@ -48,8 +48,8 @@ typedef struct _tagList {
 }LIST, *PLIST;
 
 void InitList(PLIST pList) {
-	//Æ÷ÀÎÅÍ´Â °¡±ŞÀûÀÌ¸é ÃÊ±âÈ­ ÇÒ¶§ NULL(0) À¸·Î ÃÊ±âÈ­ ÇØµÎ°í ¾²´Â°ÍÀÌ ÁÁ´Ù.
-	//¿Ö³ÄÇÏ¸é 0Àº false, 0ÀÌ ¾Æ´Ñ ¸ğµç¼ö´Â trueÀÌ±â ¶§¹®¿¡ ¾²·¹±â°ª Á¶Â÷ trueÀÌ´Ù.
+	//í¬ì¸í„°ëŠ” ê°€ê¸‰ì ì´ë©´ ì´ˆê¸°í™” í• ë•Œ NULL(0) ìœ¼ë¡œ ì´ˆê¸°í™” í•´ë‘ê³  ì“°ëŠ”ê²ƒì´ ì¢‹ë‹¤.
+	//ì™œëƒí•˜ë©´ 0ì€ false, 0ì´ ì•„ë‹Œ ëª¨ë“ ìˆ˜ëŠ” trueì´ê¸° ë•Œë¬¸ì— ì“°ë ˆê¸°ê°’ ì¡°ì°¨ trueì´ë‹¤.
 
 	pList->pBegin = NULL;
 	pList->pEnd = NULL;
@@ -78,15 +78,15 @@ void InputString(char* pString, int iSize) {
 
 int OutputMenu() {
 	system("cls");
-	cout << "1. ÇĞ»ıÃß°¡ " << endl;
-	cout << "2. ÇĞ»ı»èÁ¦ " << endl;
-	cout << "3. ÇĞ»ıÅ½»ö " << endl;
-	cout << "4. ÇĞ»ıÃâ·Â " << endl;
-	cout << "5. Á¾·á" << endl;
+	cout << "1. í•™ìƒì¶”ê°€ " << endl;
+	cout << "2. í•™ìƒì‚­ì œ " << endl;
+	cout << "3. í•™ìƒíƒìƒ‰ " << endl;
+	cout << "4. í•™ìƒì¶œë ¥ " << endl;
+	cout << "5. ì¢…ë£Œ" << endl;
 
-	cout << "¸Ş´º¸¦ ¼±ÅÃÇÏ¼¼¿ä : ";
+	cout << "ë©”ë‰´ë¥¼ ì„ íƒí•˜ì„¸ìš” : ";
 	int iInput = InputInt();
-	// ÀÔ·Â¹üÀ§ ÃÊ°ú
+	// ì…ë ¥ë²”ìœ„ ì´ˆê³¼
 	if (iInput <= MM_NONE || iInput > MM_EXIT)
 		return MM_NONE;
 
@@ -96,29 +96,29 @@ int OutputMenu() {
 
 void Insert(PLIST pList) {
 	system("cls");
-	cout << "=========== ÇĞ»ı Ãß°¡ =============" << endl;
+	cout << "=========== í•™ìƒ ì¶”ê°€ =============" << endl;
 
 	STUDENT		tStudent = {};
-	cout << "ÀÌ¸§ : ";
+	cout << "ì´ë¦„ : ";
 	InputString(tStudent.strName, NAME_SIZE);
-	cout << "ÇĞ¹ø : ";
+	cout << "í•™ë²ˆ : ";
 	tStudent.iNumber = InputInt();
-	cout << "±¹¾î : ";
+	cout << "êµ­ì–´ : ";
 	tStudent.iKor = InputInt();
-	cout << "¿µ¾î : ";
+	cout << "ì˜ì–´ : ";
 	tStudent.iEng = InputInt();
-	cout << "¼öÇĞ : ";
+	cout << "ìˆ˜í•™ : ";
 	tStudent.iMath = InputInt();
 	tStudent.iTotal = tStudent.iKor + tStudent.iEng + tStudent.iMath;
 	tStudent.fAvg = (float)tStudent.iTotal / 3;
-	cout << "ÇÕ°è : "<< tStudent.iTotal<<endl;
-	cout << "Æò±Õ : "<< tStudent.fAvg<<endl ;
+	cout << "í•©ê³„ : "<< tStudent.iTotal<<endl;
+	cout << "í‰ê·  : "<< tStudent.fAvg<<endl ;
 
-	//Ãß°¡ÇÒ ¸®½ºÆ® ³ëµå¸¦ »ı¼ºÇÑ´Ù.
+	//ì¶”ê°€í•  ë¦¬ìŠ¤íŠ¸ ë…¸ë“œë¥¼ ìƒì„±í•œë‹¤.
 	PNODE	pNode = new NODE;
 	
-	// ÇöÀç Ãß°¡ÇÏ´Â ³ëµå´Â °¡Àå ¸¶Áö¸·¿¡ Ãß°¡µÉ °ÍÀÌ±â ¶§¹®¿¡ ´ÙÀ½ ³ëµå°¡ Á¸ÀçÇÏÁö ¾ÊÀ½.
-	// ±×·¡¼­ ´ÙÀ½ ³ëµå´Â NULL·Î ÃÊ±âÈ­ÇÏ°í Á¤º¸´Â À§¿¡¼­ ÀÔ·Â¹ŞÀº ÇĞ»ıÁ¤º¸¸¦ ÁØ´Ù.
+	// í˜„ì¬ ì¶”ê°€í•˜ëŠ” ë…¸ë“œëŠ” ê°€ì¥ ë§ˆì§€ë§‰ì— ì¶”ê°€ë  ê²ƒì´ê¸° ë•Œë¬¸ì— ë‹¤ìŒ ë…¸ë“œê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ.
+	// ê·¸ë˜ì„œ ë‹¤ìŒ ë…¸ë“œëŠ” NULLë¡œ ì´ˆê¸°í™”í•˜ê³  ì •ë³´ëŠ” ìœ„ì—ì„œ ì…ë ¥ë°›ì€ í•™ìƒì •ë³´ë¥¼ ì¤€ë‹¤.
 	pNode->pNext = NULL;
 	pNode->tStudent = tStudent;
 
@@ -150,22 +150,22 @@ void ClearList(PLIST pList) {
 }
 
 
-//const Æ÷ÀÎÅÍÀÌ±â ¶§¹®¿¡ °¡¸®Å°´Â ´ë»óÀÇ °ªÀ» º¯°æÇÒ ¼ö ¾ø´Ù.
+//const í¬ì¸í„°ì´ê¸° ë•Œë¬¸ì— ê°€ë¦¬í‚¤ëŠ” ëŒ€ìƒì˜ ê°’ì„ ë³€ê²½í•  ìˆ˜ ì—†ë‹¤.
 void OutputStudent(const PSTUDENT pStudent) {
-	cout << "ÀÌ¸§ : " << pStudent->strName << endl;
-	cout << "ÇĞ¹ø : " << pStudent->iNumber << endl;
-	cout << "±¹¾î : " << pStudent->iKor << endl;
-	cout << "¿µ¾î : " << pStudent->iEng << endl;
-	cout << "¼öÇĞ : " << pStudent->iMath << endl;
-	cout << "ÇÕ°è : " << pStudent->iTotal << endl;
-	cout << "Æò±Õ : " << pStudent->fAvg << endl;
+	cout << "ì´ë¦„ : " << pStudent->strName << endl;
+	cout << "í•™ë²ˆ : " << pStudent->iNumber << endl;
+	cout << "êµ­ì–´ : " << pStudent->iKor << endl;
+	cout << "ì˜ì–´ : " << pStudent->iEng << endl;
+	cout << "ìˆ˜í•™ : " << pStudent->iMath << endl;
+	cout << "í•©ê³„ : " << pStudent->iTotal << endl;
+	cout << "í‰ê·  : " << pStudent->fAvg << endl;
 	cout << "---------------------------------------------------" << endl;
 }
 
 
 void Output(PLIST pList) {
 	system("cls");
-	cout << "===================== ÇĞ»ı Ãâ·Â ======================" << endl;
+	cout << "===================== í•™ìƒ ì¶œë ¥ ======================" << endl;
 	PNODE	pNode = pList->pBegin;
 
 	while (pNode != NULL) {
@@ -175,14 +175,14 @@ void Output(PLIST pList) {
 		pNode = pNode->pNext;
 	}
 
-	cout << "ÇĞ»ı ¼ö : " << pList->iSize << endl;
+	cout << "í•™ìƒ ìˆ˜ : " << pList->iSize << endl;
 
 	system("pause");
 }
 void Search(PLIST pList) {
 	system("cls");
-	cout << "===================== ÇĞ»ı Å½»ö ======================" << endl;
-	cout << "Å½»öÇÒ ÇĞ»ıÀÇ ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä : ";
+	cout << "===================== í•™ìƒ íƒìƒ‰ ======================" << endl;
+	cout << "íƒìƒ‰í•  í•™ìƒì˜ ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš” : ";
 	char strName[NAME_SIZE] = {};
 	InputString(strName,NAME_SIZE);
 	PNODE	pNode = pList->pBegin;
@@ -194,30 +194,30 @@ void Search(PLIST pList) {
 		}
 		pNode = pNode->pNext;
 	}
-	cout << "Ã£À» ÇĞ»ıÀÌ ¾ø½À´Ï´Ù." << endl;
+	cout << "ì°¾ì„ í•™ìƒì´ ì—†ìŠµë‹ˆë‹¤." << endl;
 	system("pause");
 }
 
 void Delete(PLIST pList) {
 	system("cls");
-	cout << "===================== ÇĞ»ı »èÁ¦ ======================" << endl;
-	cout << "»èÁ¦ÇÒ ÇĞ»ıÀÇ ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä : ";
+	cout << "===================== í•™ìƒ ì‚­ì œ ======================" << endl;
+	cout << "ì‚­ì œí•  í•™ìƒì˜ ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš” : ";
 	char	strName[NAME_SIZE] = {};
 	InputString(strName, NAME_SIZE);
 	PNODE pNode = pList->pBegin;
 	PNODE pPrev= NULL;
 	while (pNode != NULL) {
 		if (strcmp(pNode->tStudent.strName, strName) == 0) {
-			//Áö¿ï ³ëµåÀÇ ´ÙÀ½ ³ëµå¸¦ ¾ò¾î¿È.
+			//ì§€ìš¸ ë…¸ë“œì˜ ë‹¤ìŒ ë…¸ë“œë¥¼ ì–»ì–´ì˜´.
 			PNODE pNext = pNode->pNext;
-			//¸¸¾à ÀÌÀü ³ëµå°¡ NULLÀÌ¶ó¸é Á¦ÀÏ Ã³À½ ³ëµå¸¦ Áö¿î´Ù´Â ÀÇ¹Ì.
+			//ë§Œì•½ ì´ì „ ë…¸ë“œê°€ NULLì´ë¼ë©´ ì œì¼ ì²˜ìŒ ë…¸ë“œë¥¼ ì§€ìš´ë‹¤ëŠ” ì˜ë¯¸.
 			if (pPrev == NULL) {
 				delete pNode;
 				pList->pBegin = pNext;
 				if (pNext == NULL)
 					pList->pEnd = NULL;
 			}
-			//ÀÌÀü ³ëµå°¡ ÀÖÀ» °æ¿ì¿¡´Â ÀÌÀü ³ëµåÀÇ ´ÙÀ½À» Áö¿î ³ëµåÀÇ ´ÙÀ½³ëµå·Î ¿¬°á.
+			//ì´ì „ ë…¸ë“œê°€ ìˆì„ ê²½ìš°ì—ëŠ” ì´ì „ ë…¸ë“œì˜ ë‹¤ìŒì„ ì§€ìš´ ë…¸ë“œì˜ ë‹¤ìŒë…¸ë“œë¡œ ì—°ê²°.
 			else {
 				delete pNode;
 				pPrev->pNext = pNext;
@@ -225,17 +225,17 @@ void Delete(PLIST pList) {
 					pList->pEnd = pPrev;
 			}
 			
-			cout << "»èÁ¦ ¿Ï·á!" << endl;
+			cout << "ì‚­ì œ ì™„ë£Œ!" << endl;
 			--pList->iSize;
 			system("pause");
 			return;
 		}
-		//ÇØ´çÇĞ»ıÀÌ ¾Æ´Ï¶ó¸é ÇöÀç ÇĞ»ıÀÌ ÀÌÀü ÇĞ»ıÀÌ µÈ´Ù.
+		//í•´ë‹¹í•™ìƒì´ ì•„ë‹ˆë¼ë©´ í˜„ì¬ í•™ìƒì´ ì´ì „ í•™ìƒì´ ëœë‹¤.
 		pPrev = pNode;
 		pNode = pNode->pNext;
 
 	}
-	cout << "»èÁ¦ÇÒ ÇĞ»ıÀÌ ¾ø½À´Ï´Ù." << endl;
+	cout << "ì‚­ì œí•  í•™ìƒì´ ì—†ìŠµë‹ˆë‹¤." << endl;
 	system("pause");
 }
 
