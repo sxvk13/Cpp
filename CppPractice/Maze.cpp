@@ -1,7 +1,7 @@
 ﻿/*
 * Lecture 38 Maze Game
 */
-
+/*
 
 #include <iostream>
 #include <conio.h>
@@ -541,3 +541,4 @@ int main() {
 
 	return 0;
 }
+*/
