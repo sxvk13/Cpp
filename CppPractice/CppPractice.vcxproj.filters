@@ -81,5 +81,16 @@
     <ClCompile Include="LinkedList.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="DoubleLinkedlist.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="List.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
