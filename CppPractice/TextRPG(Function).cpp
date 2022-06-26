@@ -1,12 +1,18 @@
-/*
-	TexptRPG (Function ) Lecture Code
+ï»¿/*
+	TextRPG (Function ) Lecture Code
+	06-23 Lecture 54 [TextRPG Player File] + Project Rebuild ~ Lecture 55 [ Monster Tool , Item Tool ]
 */
 /*
 #include <iostream>
 #include <time.h>
 
 using namespace std;
-
+enum GAME_MODE {
+	GM_NONE,
+	GM_NEW,
+	GM_LOAD,
+	GM_EXIT
+};
 enum MAIN_MENU {
 	MM_NONE,
 	MM_MAP,
@@ -21,9 +27,9 @@ enum MAP_TYPE {
 	MT_HARD,
 	MT_BACK
 };
-// ¹®ÀÚ¿­À» Á÷Á¢ÀûÀ¸·Î ºñ±³ÇÏ´Â°Í º¸´Ù 
-// Á¤¼ö¸¦ ºñ±³ÇÏ´Â°ÍÀÌ ºü¸£±â ¶§¹®¿¡ Á÷¾÷À»
-// ¿­°ÅÇüÀ¸·Î Á¤ÀÇ
+// ë¬¸ìì—´ì„ ì§ì ‘ì ìœ¼ë¡œ ë¹„êµí•˜ëŠ”ê²ƒ ë³´ë‹¤ 
+// ì •ìˆ˜ë¥¼ ë¹„êµí•˜ëŠ”ê²ƒì´ ë¹ ë¥´ê¸° ë•Œë¬¸ì— ì§ì—…ì„
+// ì—´ê±°í˜•ìœ¼ë¡œ ì •ì˜
 enum JOB {
 	JOB_NONE,
 	JOB_KNIGHT,
@@ -106,10 +112,10 @@ struct _tagPlayer {
 	int		iHPMax;
 	int		iMP;
 	int		iMPMax;
-	int		iExp; //ÇöÀç °æÇèÄ¡
+	int		iExp; //í˜„ì¬ ê²½í—˜ì¹˜
 	int		iLevel;
-	_tagItem	tEquip[EQ_MAX]; // ÀåÂøÇÑ ¾ÆÀÌÅÛ Á¾·ù
-	bool		bEquip[EQ_MAX]; // ÇØ´ç Á¾·ù ¾ÆÀÌÅÛ ÀåÂø ¿©ºÎ
+	_tagItem	tEquip[EQ_MAX]; // ì¥ì°©í•œ ì•„ì´í…œ ì¢…ë¥˜
+	bool		bEquip[EQ_MAX]; // í•´ë‹¹ ì¢…ë¥˜ ì•„ì´í…œ ì¥ì°© ì—¬ë¶€
 	_tagInventory	tInventory;
 };
 
@@ -123,10 +129,10 @@ struct _tagMonster {
 	int		iHPMax;
 	int		iMP;
 	int		iMPMax;
-	int		iExp; //»ç³É½Ã ÁÖ´Â °æÇèÄ¡
+	int		iExp; //ì‚¬ëƒ¥ì‹œ ì£¼ëŠ” ê²½í—˜ì¹˜
 	int		iLevel;
-	int		iGoldMin; //ÃÖ¼Ò µå¶ø °ñµå
-	int		iGoldMax;// ÃÖ´ë µå¶ø °ñµå
+	int		iGoldMin; //ìµœì†Œ ë“œë ê³¨ë“œ
+	int		iGoldMax;// ìµœëŒ€ ë“œë ê³¨ë“œ
 };
 
 struct _tagLevelUpStatus {
@@ -157,7 +163,7 @@ _tagLevelUpStatus CreateLvUpstate(int iAttackMin, int iAttackMax,
 _tagMonster CreateMonster(const char* pName, int iAttackMin, int iAttackMax, int iArmorMin,
 	int iArmorMax, int iHP, int iHPMax, int iMP, int iMPMAX, int iLevel, int iExp, int iGoldMin, int iGoleMax) {
 
-	//¸ó½ºÅÍ »ı¼º
+	//ëª¬ìŠ¤í„° ìƒì„±
 	_tagMonster tMonster = {};
 
 	strcpy_s(tMonster.strName, pName);
@@ -177,45 +183,55 @@ _tagMonster CreateMonster(const char* pName, int iAttackMin, int iAttackMax, int
 	return tMonster;
 }
 void SetMonster(_tagMonster* pMonsterArr) {
-	//¸ó½ºÅÍÀÇ Á¤º¸¸¦ Á¤ÀÇÇÔ
-	pMonsterArr[MT_EASY - 1] = CreateMonster("°íºí¸°", 20, 30, 2, 5, 100, 100, 10,
-		10, 1, 1000, 500, 1500);
-	pMonsterArr[MT_NORMAL - 1] = CreateMonster("Æ®·Ñ", 80, 130, 60, 90, 2000,
-		2000, 100, 100, 5, 7000, 6000, 8000);
-	pMonsterArr[MT_HARD - 1] = CreateMonster("µå·¡°ï", 250, 500, 200, 400,
-		30000, 30000, 20000, 20000, 10, 30000, 20000, 50000);
+	//ëª¬ìŠ¤í„°ì˜ ì •ë³´ë¥¼ ì •ì˜í•¨
+	
+	FILE* pFile = NULL;
+	fopen_s(&pFile, "Monster.mst", "rb");
+	if (pFile) {
+		fread(pMonsterArr, sizeof(_tagMonster), MT_BACK-1, pFile);
+		fclose(pFile);	
+	}
+	
+	//pMonsterArr[MT_EASY - 1] = CreateMonster("ê³ ë¸”ë¦°", 20, 30, 2, 5, 100, 100, 10,
+	//	10, 1, 1000, 500, 1500);
+	//pMonsterArr[MT_NORMAL - 1] = CreateMonster("íŠ¸ë¡¤", 80, 130, 60, 90, 2000,
+	//	2000, 100, 100, 5, 7000, 6000, 8000);
+	//pMonsterArr[MT_HARD - 1] = CreateMonster("ë“œë˜ê³¤", 250, 500, 200, 400,
+	//	30000, 30000, 20000, 20000, 10, 30000, 20000, 50000);
+
+
 }
 
-//·¹º§¾÷¿¡ ÇÊ¿äÇÑ °æÇèÄ¡ ¸ñ·ÏÀ» ¸¸µç´Ù.
+//ë ˆë²¨ì—…ì— í•„ìš”í•œ ê²½í—˜ì¹˜ ëª©ë¡ì„ ë§Œë“ ë‹¤.
 const int g_iLevelUpExp[LEVEL_MAX] = { 4000, 10000, 20000, 35000, 50000, 70000, 100000, 150000, 200000, 400000 };
 
-//Á÷¾÷º° ¼ºÀåÄ¡ Å×ÀÌºí
+//ì§ì—…ë³„ ì„±ì¥ì¹˜ í…Œì´ë¸”
 _tagLevelUpStatus	g_tLvUpTable[JOB_END - 1] = {};
 
 
-//¼ıÀÚ ÀÔ·ÂÀ» ¹Ş´Â´Ù. ÀÔ·Â ¿À·ù±îÁö Ã³¸®ÇØ ÁÖ°í INT_MAX¸¦ ¸®ÅÏÇÏ¸é
-//ÀÔ·Â ¿À·ùÀÌ´Ù.
+//ìˆ«ì ì…ë ¥ì„ ë°›ëŠ”ë‹¤. ì…ë ¥ ì˜¤ë¥˜ê¹Œì§€ ì²˜ë¦¬í•´ ì£¼ê³  INT_MAXë¥¼ ë¦¬í„´í•˜ë©´
+//ì…ë ¥ ì˜¤ë¥˜ì´ë‹¤.
 int InputInt() {
 	int iInput;
 	cin >> iInput;
 	if (cin.fail()) {
 		cin.clear();
 		cin.ignore(1024, '\n');
-		// Àß¸øµÈ ÀÔ·Â°ªÀ» ÀÇ¹ÌÇÏ´Â INT_MAX ¸®ÅÏ ;
+		// ì˜ëª»ëœ ì…ë ¥ê°’ì„ ì˜ë¯¸í•˜ëŠ” INT_MAX ë¦¬í„´ ;
 		return INT_MAX;
 	}
 	return iInput;
 }
-//¸ŞÀÎ ¸Ş´º¸¦ È­¸é¿¡ º¸¿©ÁÖ°í ÀÔ·Â¹ŞÀº ¸Ş´º¸¦ ¹İÈ¯ÇÑ´Ù.
-//ÀÔ·Â ¿À·ùÀÏ °æ¿ì È¤Àº Àß¸øµÈ ¹øÈ£ÀÏ °æ¿ì MM_NONE¸¦ ¹İÈ¯.
+//ë©”ì¸ ë©”ë‰´ë¥¼ í™”ë©´ì— ë³´ì—¬ì£¼ê³  ì…ë ¥ë°›ì€ ë©”ë‰´ë¥¼ ë°˜í™˜í•œë‹¤.
+//ì…ë ¥ ì˜¤ë¥˜ì¼ ê²½ìš° í˜¹ì€ ì˜ëª»ëœ ë²ˆí˜¸ì¼ ê²½ìš° MM_NONEë¥¼ ë°˜í™˜.
 int OuputMainMenu() {
 	system("cls");
-	cout << "**********************·Îºñ**********************" << endl << endl;
-	cout << "1. ¸Ê " << endl;
-	cout << "2. »óÁ¡ " << endl;
-	cout << "3. °¡¹æ " << endl;
-	cout << "4. Á¾·á " << endl;
-	cout << "¸Ş´º¸¦ ¼±ÅÃÇØ ÁÖ¼¼¿ä :";
+	cout << "**********************ë¡œë¹„**********************" << endl << endl;
+	cout << "1. ë§µ " << endl;
+	cout << "2. ìƒì  " << endl;
+	cout << "3. ê°€ë°© " << endl;
+	cout << "4. ì¢…ë£Œ " << endl;
+	cout << "ë©”ë‰´ë¥¼ ì„ íƒí•´ ì£¼ì„¸ìš” :";
 	int iMenu = InputInt();
 	if (iMenu == INT_MAX || iMenu <=MM_NONE||iMenu >MM_EXIT)
 		return MM_NONE;
@@ -227,28 +243,28 @@ int OuputMainMenu() {
 
 
 void SetWeapon(_tagItem* pStoreWeapon) {
-	//¹«±â»óÁ¡.
-	strcpy_s(pStoreWeapon[0].strName, "·Õ¼Òµå");
-	strcpy_s(pStoreWeapon[0].strTypeName, "¹«±â");
-	strcpy_s(pStoreWeapon[0].strDesc, "Å«Ä®ÀÔ´Ï´Ù.");
+	//ë¬´ê¸°ìƒì .
+	strcpy_s(pStoreWeapon[0].strName, "ë¡±ì†Œë“œ");
+	strcpy_s(pStoreWeapon[0].strTypeName, "ë¬´ê¸°");
+	strcpy_s(pStoreWeapon[0].strDesc, "í°ì¹¼ì…ë‹ˆë‹¤.");
 	pStoreWeapon[0].iPrice = 3000;
 	pStoreWeapon[0].iSell = 1500;
 	pStoreWeapon[0].iMax = 15;
 	pStoreWeapon[0].iMin = 10;
 	pStoreWeapon[0].eType = (ITEM_TYPE)ITEM_WEAPON;
 
-	strcpy_s(pStoreWeapon[1].strName, "Àå±Ã");
-	strcpy_s(pStoreWeapon[1].strTypeName, "¹«±â");
-	strcpy_s(pStoreWeapon[1].strDesc, "Å«È°ÀÔ´Ï´Ù.");
+	strcpy_s(pStoreWeapon[1].strName, "ì¥ê¶");
+	strcpy_s(pStoreWeapon[1].strTypeName, "ë¬´ê¸°");
+	strcpy_s(pStoreWeapon[1].strDesc, "í°í™œì…ë‹ˆë‹¤.");
 	pStoreWeapon[1].iPrice = 3000;
 	pStoreWeapon[1].iSell = 1500;
 	pStoreWeapon[1].iMax = 15;
 	pStoreWeapon[1].iMin = 10;
 	pStoreWeapon[1].eType = (ITEM_TYPE)ITEM_WEAPON;
 
-	strcpy_s(pStoreWeapon[2].strName, "½ºÅÂÇÁ");
-	strcpy_s(pStoreWeapon[2].strTypeName, "¹«±â");
-	strcpy_s(pStoreWeapon[2].strDesc, "ÁöÆÎÀÌÀÔ´Ï´Ù.");
+	strcpy_s(pStoreWeapon[2].strName, "ìŠ¤íƒœí”„");
+	strcpy_s(pStoreWeapon[2].strTypeName, "ë¬´ê¸°");
+	strcpy_s(pStoreWeapon[2].strDesc, "ì§€íŒ¡ì´ì…ë‹ˆë‹¤.");
 	pStoreWeapon[2].iPrice = 3000;
 	pStoreWeapon[2].iSell = 1500;
 	pStoreWeapon[2].iMax = 15;
@@ -257,28 +273,28 @@ void SetWeapon(_tagItem* pStoreWeapon) {
 
 }
 void SetArmor(_tagItem* pStoreArmor) {
-	//¹æ¾î±¸ »óÁ¡.
-	strcpy_s(pStoreArmor[0].strName, "Åõ±¸");
-	strcpy_s(pStoreArmor[0].strTypeName, "¹æ¾î±¸");
-	strcpy_s(pStoreArmor[0].strDesc, "Åõ±¸ÀÔ´Ï´Ù.");
+	//ë°©ì–´êµ¬ ìƒì .
+	strcpy_s(pStoreArmor[0].strName, "íˆ¬êµ¬");
+	strcpy_s(pStoreArmor[0].strTypeName, "ë°©ì–´êµ¬");
+	strcpy_s(pStoreArmor[0].strDesc, "íˆ¬êµ¬ì…ë‹ˆë‹¤.");
 	pStoreArmor[0].iPrice = 3000;
 	pStoreArmor[0].iSell = 1500;
 	pStoreArmor[0].iMax = 15;
 	pStoreArmor[0].iMin = 10;
 	pStoreArmor[0].eType = (ITEM_TYPE)ITEM_ARMOR;
 
-	strcpy_s(pStoreArmor[1].strName, "°©¿Ê");
-	strcpy_s(pStoreArmor[1].strTypeName, "¹æ¾î±¸");
-	strcpy_s(pStoreArmor[1].strDesc, "°©¿ÊÀÔ´Ï´Ù.");
+	strcpy_s(pStoreArmor[1].strName, "ê°‘ì˜·");
+	strcpy_s(pStoreArmor[1].strTypeName, "ë°©ì–´êµ¬");
+	strcpy_s(pStoreArmor[1].strDesc, "ê°‘ì˜·ì…ë‹ˆë‹¤.");
 	pStoreArmor[1].iPrice = 3000;
 	pStoreArmor[1].iSell = 1500;
 	pStoreArmor[1].iMax = 15;
 	pStoreArmor[1].iMin = 10;
 	pStoreArmor[1].eType = (ITEM_TYPE)ITEM_ARMOR;
 
-	strcpy_s(pStoreArmor[2].strName, "½Å¹ß");
-	strcpy_s(pStoreArmor[2].strTypeName, "¹æ¾î±¸");
-	strcpy_s(pStoreArmor[2].strDesc, "½Å¹ßÀÔ´Ï´Ù.");
+	strcpy_s(pStoreArmor[2].strName, "ì‹ ë°œ");
+	strcpy_s(pStoreArmor[2].strTypeName, "ë°©ì–´êµ¬");
+	strcpy_s(pStoreArmor[2].strDesc, "ì‹ ë°œì…ë‹ˆë‹¤.");
 	pStoreArmor[2].iPrice = 3000;
 	pStoreArmor[2].iSell = 1500;
 	pStoreArmor[2].iMax = 15;
@@ -289,87 +305,87 @@ void SetArmor(_tagItem* pStoreArmor) {
 void OutputBattleTag(MAP_TYPE eMenu) {
 	switch (eMenu) {
 	case MT_EASY:
-		cout << "**********************½¬¿ò**********************" << endl << endl;
+		cout << "**********************ì‰¬ì›€**********************" << endl << endl;
 		break;
 	case MT_NORMAL:
-		cout << "**********************º¸Åë**********************" << endl << endl;
+		cout << "**********************ë³´í†µ**********************" << endl << endl;
 		break;
 	case MT_HARD:
-		cout << "**********************¾î·Á¿ò**********************" << endl << endl;
+		cout << "**********************ì–´ë ¤ì›€**********************" << endl << endl;
 		break;
 	}
 }
 
 void OutputPlayer(_tagPlayer* pPlayer) {
 	
-	// ÇÃ·¹ÀÌ¾î Á¤º¸¸¦ Ãâ·ÂÇÑ´Ù.
+	// í”Œë ˆì´ì–´ ì •ë³´ë¥¼ ì¶œë ¥í•œë‹¤.
 	cout << "=======================Player=======================" << endl;
-	cout << "ÀÌ¸§ : " << pPlayer->strName << "\tÁ÷¾÷ :" <<
+	cout << "ì´ë¦„ : " << pPlayer->strName << "\tì§ì—… :" <<
 		pPlayer->strJobName << endl;
-	cout << "·¹º§ : " << pPlayer->iLevel << "\t°æÇèÄ¡ :" <<
+	cout << "ë ˆë²¨ : " << pPlayer->iLevel << "\tê²½í—˜ì¹˜ :" <<
 		pPlayer->iExp << " / " << g_iLevelUpExp[pPlayer->iLevel - 1] << endl;
-	// ¹«±â¸¦ ÀåÂøÇÏ°í  ÀÖÀ» °æ¿ì °ø°İ·Â¿¡ ¹«±â °ø°İ·ÂÀ» Ãß°¡ÇÏ¿© Ãâ·Â.
+	// ë¬´ê¸°ë¥¼ ì¥ì°©í•˜ê³   ìˆì„ ê²½ìš° ê³µê²©ë ¥ì— ë¬´ê¸° ê³µê²©ë ¥ì„ ì¶”ê°€í•˜ì—¬ ì¶œë ¥.
 
 	if (pPlayer->bEquip[EQ_WEAPON] == true) {
-		cout << "°ø°İ·Â : " << pPlayer->iAttackMin << " + " <<
+		cout << "ê³µê²©ë ¥ : " << pPlayer->iAttackMin << " + " <<
 			pPlayer->tEquip[EQ_WEAPON].iMin << " - " <<
 			pPlayer->iAttackMax << " + " << pPlayer->tEquip[EQ_WEAPON].iMax;
 	}
 	else {
 
-		cout << "°ø°İ·Â : " << pPlayer->iAttackMin << " - " <<
+		cout << "ê³µê²©ë ¥ : " << pPlayer->iAttackMin << " - " <<
 			pPlayer->iAttackMax;
 	}
 
-	//¹æ¾î±¸¸¦ ÀåÂøÇÏ°í ÀÖÀ» °æ¿ì ¹æ¾î·Â¿¡ ¹æ¾î±¸ ¹æ¾î±¸ ¹æ¿©·Â¹æ¾î·ÂÀ» Ãß°¡ÇÏ¿© Ãâ·Á
+	//ë°©ì–´êµ¬ë¥¼ ì¥ì°©í•˜ê³  ìˆì„ ê²½ìš° ë°©ì–´ë ¥ì— ë°©ì–´êµ¬ ë°©ì–´êµ¬ ë°©ì—¬ë ¥ë°©ì–´ë ¥ì„ ì¶”ê°€í•˜ì—¬ ì¶œë ¤
 
 	if (pPlayer->bEquip[EQ_ARMOR] == true) {
-		cout << "\t¹æ¾î·Â : " << pPlayer->iArmorMax << " + " <<
+		cout << "\të°©ì–´ë ¥ : " << pPlayer->iArmorMax << " + " <<
 			pPlayer->tEquip[EQ_ARMOR].iMin << " - " <<
 			pPlayer->iArmorMax << " + " << pPlayer->tEquip[EQ_ARMOR].iMax << endl;
 	}
 	else {
 
-		cout << "\t¹æ¾î·Â : " << pPlayer->iArmorMin << " - " <<
+		cout << "\të°©ì–´ë ¥ : " << pPlayer->iArmorMin << " - " <<
 			pPlayer->iArmorMax << endl;
 	}
-	cout << "Ã¼·Â : " << pPlayer->iHP << " / " << pPlayer->iHPMax <<
-		"\t¸¶·Â : " << pPlayer->iMP << " / " << pPlayer->iMPMax << endl;
+	cout << "ì²´ë ¥ : " << pPlayer->iHP << " / " << pPlayer->iHPMax <<
+		"\të§ˆë ¥ : " << pPlayer->iMP << " / " << pPlayer->iMPMax << endl;
 	if (pPlayer->bEquip[EQ_WEAPON]) {
-		cout << "ÀåÂø¹«±â : " << pPlayer->tEquip[EQ_WEAPON].strName;
+		cout << "ì¥ì°©ë¬´ê¸° : " << pPlayer->tEquip[EQ_WEAPON].strName;
 	}
 	else
-		cout << "ÀåÀÛ¹«±â : ¾øÀ½";
+		cout << "ì¥ì‘ë¬´ê¸° : ì—†ìŒ";
 	if (pPlayer->bEquip[EQ_ARMOR]) {
-		cout << "\tÀåÂø¹æ¾î±¸ : " << pPlayer->tEquip[EQ_ARMOR].strName << endl;
+		cout << "\tì¥ì°©ë°©ì–´êµ¬ : " << pPlayer->tEquip[EQ_ARMOR].strName << endl;
 	}
 	else {
-		cout << "\t\tÀåÂø¹æ¾î±¸ :¾øÀ½" << endl;
+		cout << "\t\tì¥ì°©ë°©ì–´êµ¬ :ì—†ìŒ" << endl;
 	}
-	cout << "º¸À¯ °ñµå : " << pPlayer->tInventory.iGold << " Gold " << endl << endl;
+	cout << "ë³´ìœ  ê³¨ë“œ : " << pPlayer->tInventory.iGold << " Gold " << endl << endl;
 }
 
 void OutputMonster(_tagMonster* pMonster) {
-	//¸ó½ºÅÍ Á¤º¸ Ãâ·Â.
+	//ëª¬ìŠ¤í„° ì •ë³´ ì¶œë ¥.
 
 	cout << "=======================Monster=======================" << endl;
-	cout << "ÀÌ¸§ : " << pMonster->strName << "\t·¹º§ :" <<
+	cout << "ì´ë¦„ : " << pMonster->strName << "\të ˆë²¨ :" <<
 		pMonster->iLevel << endl;
-	cout << "°ø°İ·Â : " << pMonster->iAttackMin << " - " <<
-		pMonster->iAttackMax << "\t¹æ¾î·Â : " << pMonster->iArmorMin << " - " <<
+	cout << "ê³µê²©ë ¥ : " << pMonster->iAttackMin << " - " <<
+		pMonster->iAttackMax << "\të°©ì–´ë ¥ : " << pMonster->iArmorMin << " - " <<
 		pMonster->iArmorMax << endl;
-	cout << "Ã¼·Â : " << pMonster->iHP << " / " << pMonster->iHPMax <<
-		"\t¸¶·Â : " << pMonster->iMP << " / " << pMonster->iMPMax << endl;
-	cout << "È¹µæ°æÇèÄ¡ : " << pMonster->iExp << "\tÈ¹µæ°ñµå : " <<
+	cout << "ì²´ë ¥ : " << pMonster->iHP << " / " << pMonster->iHPMax <<
+		"\të§ˆë ¥ : " << pMonster->iMP << " / " << pMonster->iMPMax << endl;
+	cout << "íšë“ê²½í—˜ì¹˜ : " << pMonster->iExp << "\tíšë“ê³¨ë“œ : " <<
 		pMonster->iGoldMin << " - " << pMonster->iGoldMax << " Gold " << endl << endl << endl;
 
 }
 
 int OutputBattleMenu() {
 
-	cout << "1.°ø°İ" << endl;
-	cout << "2.µµ¸Á°¡±â" << endl;
-	cout << "¼±ÅÃÇØÁÖ¼¼¿ä : ";
+	cout << "1.ê³µê²©" << endl;
+	cout << "2.ë„ë§ê°€ê¸°" << endl;
+	cout << "ì„ íƒí•´ì£¼ì„¸ìš” : ";
 
 	int iAction = InputInt();
 
@@ -381,13 +397,13 @@ int OutputBattleMenu() {
 
 
 void Battle(_tagPlayer* pPlayer, _tagMonster* pMonster) {
-	//¿¹¸¦ µé¾î Min 5 Max 15 ¶ó°í °¡Á¤ÇÒ °æ¿ì
-						// 15 - 5 +1 À» ÇÏ¸é 11 ÀÌ µÇ°í, 11·Î ³ª´« ³ª¸ÓÁö´Â 0~10ÀÌ ³ª¿È.
-						// ¿©±â¿¡ Min°ªÀÎ 5¸¦ ´õÇÏ°Ô µÇ¸é 5~15 »çÀÌ·Î °ªÀÌ ³ª¿À°Ô µÈ´Ù.
+	//ì˜ˆë¥¼ ë“¤ì–´ Min 5 Max 15 ë¼ê³  ê°€ì •í•  ê²½ìš°
+						// 15 - 5 +1 ì„ í•˜ë©´ 11 ì´ ë˜ê³ , 11ë¡œ ë‚˜ëˆˆ ë‚˜ë¨¸ì§€ëŠ” 0~10ì´ ë‚˜ì˜´.
+						// ì—¬ê¸°ì— Minê°’ì¸ 5ë¥¼ ë”í•˜ê²Œ ë˜ë©´ 5~15 ì‚¬ì´ë¡œ ê°’ì´ ë‚˜ì˜¤ê²Œ ëœë‹¤.
 	int iAttackMin = pPlayer->iAttackMin;
 	int iAttackMax = pPlayer->iAttackMax;
 
-	//¹«±â¸¦ÀåÂøÇÏ°í ÀÖÀ» °æ¿ì ¹«±â¿Í Min , Max¸¦ ´õÇØÁØ´Ù
+	//ë¬´ê¸°ë¥¼ì¥ì°©í•˜ê³  ìˆì„ ê²½ìš° ë¬´ê¸°ì™€ Min , Maxë¥¼ ë”í•´ì¤€ë‹¤
 	if (pPlayer->bEquip[EQ_WEAPON]) {
 		iAttackMin += pPlayer->tEquip[EQ_WEAPON].iMin;
 		iAttackMax += pPlayer->tEquip[EQ_WEAPON].iMax;
@@ -398,46 +414,46 @@ void Battle(_tagPlayer* pPlayer, _tagMonster* pMonster) {
 		iAttackMin;
 	int iArmor = rand() % (pMonster->iArmorMax - pMonster->iArmorMin + 1) +
 		pMonster->iArmorMin;
-	//ÃÖ¼Ò µ¥¹ÌÁö ¼³Á¤
+	//ìµœì†Œ ë°ë¯¸ì§€ ì„¤ì •
 	//int iDamage = ((iAttack - iArmor)<1)?1:(iAttack-iArmor);
 	int iDamage = iAttack - iArmor;
 	iDamage = iDamage < 1 ? 1 : iDamage;
 
-	//¸ó½ºÅÍ HP¸¦ °¨¼Ò ½ÃÅ²´Ù.
+	//ëª¬ìŠ¤í„° HPë¥¼ ê°ì†Œ ì‹œí‚¨ë‹¤.
 	pMonster->iHP -= iDamage;
 
-	cout << pPlayer->strName << " °¡ " << pMonster->strName << " ¿¡°Ô "
-		<< iDamage << "¸¸Å­ÀÇ ÇÇÇØ¸¦ ÀÔÇû½À´Ï´Ù." << endl;
+	cout << pPlayer->strName << " ê°€ " << pMonster->strName << " ì—ê²Œ "
+		<< iDamage << "ë§Œí¼ì˜ í”¼í•´ë¥¼ ì…í˜”ìŠµë‹ˆë‹¤." << endl;
 
-	// ¸ó½ºÅÍ°¡ Á×¾úÀ» °æ¿ì¸¦ Ã³¸®
+	// ëª¬ìŠ¤í„°ê°€ ì£½ì—ˆì„ ê²½ìš°ë¥¼ ì²˜ë¦¬
 	if (pMonster->iHP <= 0) {
-		cout << pMonster->strName << " ¸ó½ºÅÍ°¡ »ç¸ÁÇÏ¿´½À´Ï´Ù." << endl << endl;
+		cout << pMonster->strName << " ëª¬ìŠ¤í„°ê°€ ì‚¬ë§í•˜ì˜€ìŠµë‹ˆë‹¤." << endl << endl;
 
 		pPlayer->iExp += pMonster->iExp;
 		int iGold = (rand() % (pMonster->iGoldMax - pMonster->iGoldMin + 1)
 			+ pMonster->iGoldMin);
 		pPlayer->tInventory.iGold += iGold;
 
-		cout << pMonster->iExp << "°æÇèÄ¡¸¦ È¹µæÇÏ¿´½À´Ï´Ù. " << endl;
-		cout << iGold << " Gold¸¦ È¹µæÇÏ¿´½À´Ï´Ù." << endl;
+		cout << pMonster->iExp << "ê²½í—˜ì¹˜ë¥¼ íšë“í•˜ì˜€ìŠµë‹ˆë‹¤. " << endl;
+		cout << iGold << " Goldë¥¼ íšë“í•˜ì˜€ìŠµë‹ˆë‹¤." << endl;
 
 
-		//Àç ÀüÅõ¸¦ À§ÇÑ ¸ó½ºÅÍ ÃÊ±âÈ­
+		//ì¬ ì „íˆ¬ë¥¼ ìœ„í•œ ëª¬ìŠ¤í„° ì´ˆê¸°í™”
 		pMonster->iHP = pMonster->iHPMax;
 		pMonster->iMP = pMonster->iMPMax;
 
-		//·¹º§¾÷À» Çß´ÂÁö Ã¼Å©
+		//ë ˆë²¨ì—…ì„ í–ˆëŠ”ì§€ ì²´í¬
 		if (pPlayer->iExp >= g_iLevelUpExp[pPlayer->iLevel - 1]) {
 			if (pPlayer->iLevel < LEVEL_MAX) {
-				// ÇÃ·¹ÀÌ¾î °æÇèÄ¡¸¦ ·¹º§¾÷¿¡ ÇÊ¿äÇÑ °æÇèÄ¡¸¸Å­ Â÷°¨ÇÑ´Ù.
+				// í”Œë ˆì´ì–´ ê²½í—˜ì¹˜ë¥¼ ë ˆë²¨ì—…ì— í•„ìš”í•œ ê²½í—˜ì¹˜ë§Œí¼ ì°¨ê°í•œë‹¤.
 				pPlayer->iExp -= g_iLevelUpExp[pPlayer->iLevel - 1];
-				//·¹º§À» Áõ°¡½ÃÅ²´Ù.
+				//ë ˆë²¨ì„ ì¦ê°€ì‹œí‚¨ë‹¤.
 				++pPlayer->iLevel;
 
-				cout << "LV" << pPlayer->iLevel << "(À¸)·Î ·¹º§¾÷ ÇÏ¿´½À´Ï´Ù." << endl;
+				cout << "LV" << pPlayer->iLevel << "(ìœ¼)ë¡œ ë ˆë²¨ì—… í•˜ì˜€ìŠµë‹ˆë‹¤." << endl;
 
-				//´É·ÂÄ¡ »ó½Â
-				//Á÷¾÷ ÀÎµ¦½º¸¦ ±¸ÇÔ.
+				//ëŠ¥ë ¥ì¹˜ ìƒìŠ¹
+				//ì§ì—… ì¸ë±ìŠ¤ë¥¼ êµ¬í•¨.
 				int iJobIndex = pPlayer->eJob - 1;
 
 				int iHPUp = rand() % (g_tLvUpTable[iJobIndex].iHPMax - g_tLvUpTable[iJobIndex].iHPMin + 1) +
@@ -453,19 +469,19 @@ void Battle(_tagPlayer* pPlayer, _tagMonster* pMonster) {
 				pPlayer->iHPMax += iHPUp;
 				pPlayer->iMPMax += iMPUp;
 
-				// Ã¼·Â°ú ¸¶³ª¸¦ È¸º¹½ÃÅ²´Ù.
+				// ì²´ë ¥ê³¼ ë§ˆë‚˜ë¥¼ íšŒë³µì‹œí‚¨ë‹¤.
 
 				pPlayer->iHP = pPlayer->iHPMax;
 				pPlayer->iMP = pPlayer->iMPMax;
 			}
 			else {
 				pPlayer->iExp = g_iLevelUpExp[pPlayer->iLevel - 1];
-				cout << "·¹º§ÀÌ ÃÖ´ëÄ¡ ÀÔ´Ï´Ù." << endl;
+				cout << "ë ˆë²¨ì´ ìµœëŒ€ì¹˜ ì…ë‹ˆë‹¤." << endl;
 			}
 		}
 		return;
 	}
-		// ¸ó½ºÅÍ°¡ »ì¾ÆÀÖ´Ù¸é ÇÃ·¹ÀÌ¾î¸¦ °ø°İÇÑ´Ù.
+		// ëª¬ìŠ¤í„°ê°€ ì‚´ì•„ìˆë‹¤ë©´ í”Œë ˆì´ì–´ë¥¼ ê³µê²©í•œë‹¤.
 		iAttack = rand() % (pMonster->iAttackMax - pMonster->iAttackMin + 1) +
 			pMonster->iAttackMin;
 
@@ -478,20 +494,20 @@ void Battle(_tagPlayer* pPlayer, _tagMonster* pMonster) {
 		}
 		iArmor = rand() % (iArmorMax - iArmorMin + 1) +
 			iArmorMin;
-		//ÃÖ¼Ò µ¥¹ÌÁö ¼³Á¤
+		//ìµœì†Œ ë°ë¯¸ì§€ ì„¤ì •
 		//int iDamage = ((iAttack - iArmor)<1)?1:(iAttack-iArmor);
 		iDamage = iAttack - iArmor;
 		iDamage = iDamage < 1 ? 1 : iDamage;
 
-		//PlayerÀÇ HP¸¦ °¨¼Ò ½ÃÅ²´Ù.
+		//Playerì˜ HPë¥¼ ê°ì†Œ ì‹œí‚¨ë‹¤.
 		pPlayer->iHP -= iDamage;
 
-		cout << pMonster->strName << " °¡ " << pPlayer->strName << " ¿¡°Ô "
-			<< iDamage << "¸¸Å­ÀÇ ÇÇÇØ¸¦ ÀÔÇû½À´Ï´Ù." << endl;
+		cout << pMonster->strName << " ê°€ " << pPlayer->strName << " ì—ê²Œ "
+			<< iDamage << "ë§Œí¼ì˜ í”¼í•´ë¥¼ ì…í˜”ìŠµë‹ˆë‹¤." << endl;
 
-		//Player°¡ Á×¾úÀ» °æ¿ì Ã³¸®
+		//Playerê°€ ì£½ì—ˆì„ ê²½ìš° ì²˜ë¦¬
 		if (pPlayer->iHP <= 0) {
-			cout << pPlayer->strName << " Player°¡ »ç¸ÁÇÏ¿´½À´Ï´Ù." << endl;
+			cout << pPlayer->strName << " Playerê°€ ì‚¬ë§í•˜ì˜€ìŠµë‹ˆë‹¤." << endl;
 
 			int iExp = pPlayer->iExp * 0.1f;
 			int iGold = pPlayer->tInventory.iGold * 0.1f;
@@ -499,10 +515,10 @@ void Battle(_tagPlayer* pPlayer, _tagMonster* pMonster) {
 			pPlayer->iExp -= iExp;
 			pPlayer->tInventory.iGold -= iGold;
 
-			cout << iExp << " ÀÇ °æÇèÄ¡¸¦ ÀÒ¾ú½À´Ï´Ù. " << endl;
-			cout << iGold << " ÀÇ Gold¸¦ ÀÒ¾ú½À´Ï´Ù." << endl;
+			cout << iExp << " ì˜ ê²½í—˜ì¹˜ë¥¼ ìƒì—ˆìŠµë‹ˆë‹¤. " << endl;
+			cout << iGold << " ì˜ Goldë¥¼ ìƒì—ˆìŠµë‹ˆë‹¤." << endl;
 
-			// Player ÀÇ »ç¸ÁÈÄ ºÎÈ°
+			// Player ì˜ ì‚¬ë§í›„ ë¶€í™œ
 			pPlayer->iHP = pPlayer->iHPMax;
 			pPlayer->iMP = pPlayer->iMPMax;
 		}
@@ -515,9 +531,9 @@ void RunBattle(_tagPlayer* pPlayer, _tagMonster* pMonsterArr, MAP_TYPE eMenu) {
 	while (true) {
 		system("cls");
 		OutputBattleTag(eMenu);
-		//ÇÃ·¹ÀÌ¾î Ãâ·Â
+		//í”Œë ˆì´ì–´ ì¶œë ¥
 		OutputPlayer(pPlayer);
-		//¸ó½ºÅÍ Ãâ·Â
+		//ëª¬ìŠ¤í„° ì¶œë ¥
 		OutputMonster(&tMonster);
 		switch (OutputBattleMenu()) {
 		case BATTLE_ATTACK:
@@ -531,16 +547,16 @@ void RunBattle(_tagPlayer* pPlayer, _tagMonster* pMonsterArr, MAP_TYPE eMenu) {
 	}
 }
 
-//¸Ê ¸Ş´º¸¦ È­¸é¿¡ º¸¿©ÁÖ°í ÀÔ·Â¹ŞÀº ¸Ş´º¸¦ ¹İÈ¯ÇÑ´Ù.
-//ÀÔ·Â ¿À·ùÀÏ °æ¿ì È¤Àº Àß¸øµÈ ¹øÈ£ÀÏ °æ¿ì MT_NONE¸¦ ¹İÈ¯.
+//ë§µ ë©”ë‰´ë¥¼ í™”ë©´ì— ë³´ì—¬ì£¼ê³  ì…ë ¥ë°›ì€ ë©”ë‰´ë¥¼ ë°˜í™˜í•œë‹¤.
+//ì…ë ¥ ì˜¤ë¥˜ì¼ ê²½ìš° í˜¹ì€ ì˜ëª»ëœ ë²ˆí˜¸ì¼ ê²½ìš° MT_NONEë¥¼ ë°˜í™˜.
 int OutPutMapMenu() {
 	system("cls");
-	cout << "**********************¸Ê**********************" << endl << endl;
-	cout << "1.½¬¿ò " << endl;
-	cout << "2.º¸Åë " << endl;
-	cout << "3.¾î·Á¿ò " << endl;
-	cout << "4.µÚ·Î°¡±â " << endl;
-	cout << "¸ÊÀ» ¼±ÅÃÇÏ¼¼¿ä : ";
+	cout << "**********************ë§µ**********************" << endl << endl;
+	cout << "1.ì‰¬ì›€ " << endl;
+	cout << "2.ë³´í†µ " << endl;
+	cout << "3.ì–´ë ¤ì›€ " << endl;
+	cout << "4.ë’¤ë¡œê°€ê¸° " << endl;
+	cout << "ë§µì„ ì„ íƒí•˜ì„¸ìš” : ";
 	int iMenu = InputInt();
 	if (iMenu == INT_MAX || iMenu <= MT_NONE || iMenu > MT_BACK)
 		return MT_NONE;
@@ -554,13 +570,13 @@ int SelectJob() {
 	int iJob = JOB_NONE;
 	while (iJob == JOB_NONE) {
 		system("cls");
-		cout << "1.±â»ç" << endl;
-		cout << "2.±Ã¼ö" << endl;
-		cout << "3.¸¶¹ı»ç" << endl;
-		cout << "Á÷¾÷À» ¼±ÅÃÇÏ¼¼¿ä : ";
+		cout << "1.ê¸°ì‚¬" << endl;
+		cout << "2.ê¶ìˆ˜" << endl;
+		cout << "3.ë§ˆë²•ì‚¬" << endl;
+		cout << "ì§ì—…ì„ ì„ íƒí•˜ì„¸ìš” : ";
 		iJob = InputInt();
-		//Á÷¾÷ÀÇ ¹üÀ§¸¦ ¹ş¾î³­ ¼ıÀÚ¸¦ ÀÔ·ÂÇßÀ»°æ¿ì
-		//°ªÀ» JOB_NONE·Î ´ëÀÔÇÏ¿© ´Ù½Ã ¹İº¹ÇÏµµ·Ï ÇÔ.
+		//ì§ì—…ì˜ ë²”ìœ„ë¥¼ ë²—ì–´ë‚œ ìˆ«ìë¥¼ ì…ë ¥í–ˆì„ê²½ìš°
+		//ê°’ì„ JOB_NONEë¡œ ëŒ€ì…í•˜ì—¬ ë‹¤ì‹œ ë°˜ë³µí•˜ë„ë¡ í•¨.
 		if(iJob==INT_MAX|| iJob <= JOB_NONE || iJob >= JOB_END) {
 			iJob = JOB_NONE;
 		}
@@ -569,11 +585,15 @@ int SelectJob() {
 }
 
 void SetPlayer(_tagPlayer* pPlayer) {
-	//ÇÃ·¹ÀÌ¾î ÀÌ¸§À» ÀÔ·Â¹ŞÀ½
-	cout << "ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä : ";
-	//¹®ÀÚ¿­ÀÇ ³¡Àº NULLÀÌ µé¾î°¡¾ßÇÏ±â ¶§¹®¿¡ NAEM_SIZE -1À» ÇØÁØ´Ù.
+	system("cls");
+	cin.clear();
+	cin.ignore(1042, '\n');
+
+	//í”Œë ˆì´ì–´ ì´ë¦„ì„ ì…ë ¥ë°›ìŒ
+	cout << "ì´ë¦„ì„ ì…ë ¥í•˜ì„¸ìš” : ";
+	//ë¬¸ìì—´ì˜ ëì€ NULLì´ ë“¤ì–´ê°€ì•¼í•˜ê¸° ë•Œë¬¸ì— NAEM_SIZE -1ì„ í•´ì¤€ë‹¤.
 	cin.getline(pPlayer->strName, NAME_SIZE - 1);
-	//½ÃÀÛ½Ã PlayerÀÇ °íÁ¤ÀûÀÎ Á¤º¸
+	//ì‹œì‘ì‹œ Playerì˜ ê³ ì •ì ì¸ ì •ë³´
 	pPlayer->eJob = (JOB)SelectJob();
 	pPlayer->iLevel = 1;
 	pPlayer->iExp = 0;
@@ -582,12 +602,12 @@ void SetPlayer(_tagPlayer* pPlayer) {
 	pPlayer->tInventory.tItem[INVENTORY_MAX - 1] = {};
 
 
-	//À§¿¡¼­ Á÷¾÷À» ¼±ÅÃÇÔ°ú µ¿½Ã¿¡ ¹üÀ§¸¦ ÇÑÁ¤ÇÏ¿´±â¶§¹®¿¡
-	//ÇØ´ç switch¹®¿¡¼­ default °ªÀ» ¼³Á¤ÇØÁÙ ÇÊ¿ä°¡ ¾øÀ½.
-	//°¢ Á÷¾÷º°·Î ´É·ÂÄ¡°¡ ´Ù¸£±â ¶§¹®¿¡ °¢°¢ÀÇ ´É·ÂÄ¡¸¦ ¼³Á¤ÇØÁÜ.
+	//ìœ„ì—ì„œ ì§ì—…ì„ ì„ íƒí•¨ê³¼ ë™ì‹œì— ë²”ìœ„ë¥¼ í•œì •í•˜ì˜€ê¸°ë•Œë¬¸ì—
+	//í•´ë‹¹ switchë¬¸ì—ì„œ default ê°’ì„ ì„¤ì •í•´ì¤„ í•„ìš”ê°€ ì—†ìŒ.
+	//ê° ì§ì—…ë³„ë¡œ ëŠ¥ë ¥ì¹˜ê°€ ë‹¤ë¥´ê¸° ë•Œë¬¸ì— ê°ê°ì˜ ëŠ¥ë ¥ì¹˜ë¥¼ ì„¤ì •í•´ì¤Œ.
 	switch (pPlayer->eJob) {
 	case JOB_KNIGHT:
-		strcpy_s(pPlayer->strJobName, "±â»ç");
+		strcpy_s(pPlayer->strJobName, "ê¸°ì‚¬");
 		pPlayer->iAttackMin = 5;
 		pPlayer->iAttackMax = 10;
 		pPlayer->iArmorMin = 15;
@@ -598,7 +618,7 @@ void SetPlayer(_tagPlayer* pPlayer) {
 		pPlayer->iMP = 100;
 		break;
 	case JOB_ARCHER:
-		strcpy_s(pPlayer->strJobName, "±Ã¼ö");
+		strcpy_s(pPlayer->strJobName, "ê¶ìˆ˜");
 		pPlayer->iAttackMin = 10;
 		pPlayer->iAttackMax = 15;
 		pPlayer->iArmorMin = 10;
@@ -609,7 +629,7 @@ void SetPlayer(_tagPlayer* pPlayer) {
 		pPlayer->iMP = 200;
 		break;
 	case JOB_WIZARD:
-		strcpy_s(pPlayer->strJobName, "¸¶¹ı»ç");
+		strcpy_s(pPlayer->strJobName, "ë§ˆë²•ì‚¬");
 		pPlayer->iAttackMin = 15;
 		pPlayer->iAttackMax = 20;
 		pPlayer->iArmorMin = 5;
@@ -622,9 +642,119 @@ void SetPlayer(_tagPlayer* pPlayer) {
 	}
 }
 
+bool LoadPlayer(_tagPlayer* pPlayer) {
+
+	FILE* pFile = NULL;
+
+	fopen_s(&pFile, "Player.ply", "rb");
+	if (pFile) {
+		
+		//í”Œë ˆì´ì–´ ì´ë¦„ì„ ì½ì–´ì˜¨ë‹¤.
+		fread(pPlayer->strName, 1, NAME_SIZE, pFile);
+		//ì§ì—… ì •ë³´ë¥¼ ì½ì–´ì˜¨ë‹¤.
+		fread(&pPlayer->eJob, sizeof(JOB), 1, pFile);
+		fread(pPlayer->strJobName, 1, NAME_SIZE, pFile);
+
+		//ê³µê²©ë ¥ ì •ë³´
+		fread(&pPlayer->iAttackMin, 4, 1, pFile);
+		fread(&pPlayer->iAttackMax, 4, 1, pFile);
+
+		//ë°©ì–´ë ¥ ì •ë³´
+		fread(&pPlayer->iArmorMin, 4, 1, pFile);
+		fread(&pPlayer->iArmorMax, 4, 1, pFile);
+
+		//ì²´ë ¥,ë§ˆë ¥ ì •ë³´
+		fread(&pPlayer->iHPMax, 4, 1, pFile);
+		fread(&pPlayer->iHP, 4, 1, pFile);
+		fread(&pPlayer->iMPMax, 4, 1, pFile);
+		fread(&pPlayer->iMP, 4, 1, pFile);
+
+		//í˜„ì¬ ê²½í—˜ì¹˜ì™€ ë ˆë²¨
+
+		fread(&pPlayer->iExp, 4, 1, pFile);
+		fread(&pPlayer->iLevel, 4, 1, pFile);
+
+		//ë¬´ê¸°ì¥ì°© ì—¬ë¶€ ì½ì–´ì˜´.
+		fread(&pPlayer->bEquip[EQ_WEAPON], sizeof(bool), 1, pFile);
+		//ë§Œì•½ ì €ì¥í• ë•Œ ë¬´ê¸°ë¥¼ ì°¨ê³  ìˆì—ˆë‹¤ë©´ í•´ë‹¹ ë¬´ê¸°ì •ë³´ë„ ê°™ì´ ì €ì¥ë˜ì–´ìˆìŒ.
+		//ê·¸ëŸ¬ë¯€ë¡œ ì—¬ê¸°ì„œ ì°¨ê³  ìˆì„ê²½ìš° ì½ì–´ì™€ì•¼í•¨.
+		if (pPlayer->bEquip[EQ_WEAPON]) {
+			fread(&pPlayer->tEquip[EQ_WEAPON], sizeof(_tagItem), 1, pFile);
+		}
+		//ë°©ì–´êµ¬ì¥ì°© ì—¬ë¶€ ì½ì–´ì˜´.
+		fread(&pPlayer->bEquip[EQ_ARMOR], sizeof(bool), 1, pFile);
+		if (pPlayer->bEquip[EQ_ARMOR]) {
+			fread(&pPlayer->tEquip[EQ_ARMOR], sizeof(_tagItem), 1, pFile);
+		}
+		//ì¸ë²¤í† ë¦¬ ë‚´ ê³¨ë“œ
+		fread(&pPlayer->tInventory.iGold, 4, 1, pFile);
+		//ì¸ë²¤í† ë¦¬ ë‚´ ì•„ì´í…œ ìˆ˜
+		fread(&pPlayer->tInventory.iItemCount, 4, 1, pFile);
+		//ì½ì–´ì˜¨ ì•„ì´í…œ ìˆ˜ë§Œí¼ ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œ ì •ë³´ ì½ì–´ì˜´.
+		fread(pPlayer->tInventory.tItem, sizeof(_tagItem), pPlayer->tInventory.iItemCount, pFile);
+
+		fclose(pFile);
+		return true;
+	}
+	return false;
+}
+
+bool SavePlayer(_tagPlayer* pPlayer) {
+	
+	FILE* pFile=NULL;
+	fopen_s(&pFile, "Player.ply", "wb");
+	if (pFile) {
+		//í”Œë ˆì´ì–´ ì´ë¦„ì„ ì €ì¥.
+		fwrite(pPlayer->strName, 1, NAME_SIZE, pFile);
+		//ì§ì—… ì •ë³´ë¥¼ ì €ì¥
+		fwrite(&pPlayer->eJob, sizeof(JOB), 1, pFile);
+		fwrite(pPlayer->strJobName, 1, NAME_SIZE, pFile);
+
+		//ê³µê²©ë ¥ ì •ë³´
+		fwrite(&pPlayer->iAttackMin, 4, 1, pFile);
+		fwrite(&pPlayer->iAttackMax, 4, 1, pFile);
+
+		//ë°©ì–´ë ¥ ì •ë³´
+		fwrite(&pPlayer->iArmorMin, 4, 1, pFile);
+		fwrite(&pPlayer->iArmorMax, 4, 1, pFile);
+
+		//ì²´ë ¥,ë§ˆë ¥ ì •ë³´
+		fwrite(&pPlayer->iHPMax, 4, 1, pFile);
+		fwrite(&pPlayer->iHP, 4, 1, pFile);
+		fwrite(&pPlayer->iMPMax, 4, 1, pFile);
+		fwrite(&pPlayer->iMP, 4, 1, pFile);
+
+		//í˜„ì¬ ê²½í—˜ì¹˜ì™€ ë ˆë²¨
+		fwrite(&pPlayer->iExp, 4, 1, pFile);
+		fwrite(&pPlayer->iLevel, 4, 1, pFile);
+
+		//ë¬´ê¸°ì¥ì°© ì—¬ë¶€ ì €ì¥.
+		fwrite(&pPlayer->bEquip[EQ_WEAPON], sizeof(bool), 1, pFile);
+		//ë§Œì•½ ì €ì¥í• ë•Œ ë¬´ê¸°ë¥¼ ì°¨ê³  ìˆì—ˆë‹¤ë©´ í•´ë‹¹ ë¬´ê¸°ì •ë³´ë„ ê°™ì´ ì €ì¥í•´ì•¼í•¨.
+		//ê·¸ëŸ¬ë¯€ë¡œ ì—¬ê¸°ì„œ ì°¨ê³  ìˆì„ê²½ìš° ì €ì¥í•´ì•¼í•¨.
+		if (pPlayer->bEquip[EQ_WEAPON]) {
+			fwrite(&pPlayer->tEquip[EQ_WEAPON], sizeof(_tagItem), 1, pFile);
+		}
+		//ë°©ì–´êµ¬ì¥ì°© ì—¬ë¶€ ì €ì¥.
+		fwrite(&pPlayer->bEquip[EQ_ARMOR], sizeof(bool), 1, pFile);
+		if (pPlayer->bEquip[EQ_ARMOR]) {
+			fwrite(&pPlayer->tEquip[EQ_ARMOR], sizeof(_tagItem), 1, pFile);
+		}
+		//ì¸ë²¤í† ë¦¬ ë‚´ ê³¨ë“œ
+		fwrite(&pPlayer->tInventory.iGold, 4, 1, pFile);
+		//ì¸ë²¤í† ë¦¬ ë‚´ ì•„ì´í…œ ìˆ˜
+		fwrite(&pPlayer->tInventory.iItemCount, 4, 1, pFile);
+		//ì½ì–´ì˜¨ ì•„ì´í…œ ìˆ˜ë§Œí¼ ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œ ì •ë³´ ì €ì¥.
+		fwrite(pPlayer->tInventory.tItem, sizeof(_tagItem), pPlayer->tInventory.iItemCount, pFile);
 
 
-//¸Ê °ü·Ã µ¿ÀÛ Ã³¸®
+		fclose(pFile);
+		return true;
+	}
+	return false;
+}
+
+//ë§µ ê´€ë ¨ ë™ì‘ ì²˜ë¦¬
 void RunMap(_tagPlayer* pPlayer, _tagMonster* pMonsterArr) {
 	bool	bLoop = true;
 	while (bLoop) {
@@ -632,7 +762,7 @@ void RunMap(_tagPlayer* pPlayer, _tagMonster* pMonsterArr) {
 
 		if (MT_BACK == iMenu)
 			return;
-		//ÀüÅõ¸¦ ½ÃÀÛ
+		//ì „íˆ¬ë¥¼ ì‹œì‘
 		RunBattle(pPlayer, pMonsterArr, (MAP_TYPE)iMenu);
 	}
 }
@@ -640,11 +770,11 @@ void RunMap(_tagPlayer* pPlayer, _tagMonster* pMonsterArr) {
 
 int OutputStoreMenu() {
 	system("cls");
-	cout << "**********************»óÁ¡**********************" << endl << endl;
-	cout << "1.¹«±â " << endl;
-	cout << "2.¹æ¾î±¸ " << endl;
-	cout << "3.µÚ·Î°¡±â " << endl;
-	cout << "¼±ÅÃÇØ ÁÖ¼¼¿ä : ";
+	cout << "**********************ìƒì **********************" << endl << endl;
+	cout << "1.ë¬´ê¸° " << endl;
+	cout << "2.ë°©ì–´êµ¬ " << endl;
+	cout << "3.ë’¤ë¡œê°€ê¸° " << endl;
+	cout << "ì„ íƒí•´ ì£¼ì„¸ìš” : ";
 	int iMenu = InputInt();
 	if (iMenu == INT_MAX || iMenu <= SM_NONE || iMenu > SM_BACK)
 		iMenu = SM_NONE;
@@ -655,21 +785,21 @@ int OutputStoreMenu() {
 
 int OutputStoreItemList(_tagInventory* pInventory, _tagItem* pStore, int iItemCount) {
 	for (int i = 0; i < iItemCount; ++i) {
-	cout << i+1 << ". ÀÌ¸§ : " << pStore[i].strName <<
-		"\tÁ¾·ù : "<<pStore[i].strTypeName<<endl;
-	cout << "°ø°İ·Â : " << pStore[i].iMin << " - " <<
+	cout << i+1 << ". ì´ë¦„ : " << pStore[i].strName <<
+		"\tì¢…ë¥˜ : "<<pStore[i].strTypeName<<endl;
+	cout << "ê³µê²©ë ¥ : " << pStore[i].iMin << " - " <<
 		pStore[i].iMax << endl;
-	cout << "ÆÇ¸Å °¡°İ : " << pStore[i].iPrice <<
-		"\t±¸¸Å °¡°İ : " << pStore[i].iSell << endl;
-	cout << "¼³¸í : "<< pStore[i].strDesc << endl << endl;
+	cout << "íŒë§¤ ê°€ê²© : " << pStore[i].iPrice <<
+		"\têµ¬ë§¤ ê°€ê²© : " << pStore[i].iSell << endl;
+	cout << "ì„¤ëª… : "<< pStore[i].strDesc << endl << endl;
 
 	}
-	cout << iItemCount + 1 << " . µÚ·Î°¡±â " << endl;
+	cout << iItemCount + 1 << " . ë’¤ë¡œê°€ê¸° " << endl;
 
-	cout << "º¸À¯ ±İ¾× : " << pInventory->iGold << " Gold" << endl;
-	cout << "³²Àº °ø°£ : " << INVENTORY_MAX - pInventory->iItemCount << "Ä­" << endl;
+	cout << "ë³´ìœ  ê¸ˆì•¡ : " << pInventory->iGold << " Gold" << endl;
+	cout << "ë‚¨ì€ ê³µê°„ : " << INVENTORY_MAX - pInventory->iItemCount << "ì¹¸" << endl;
 
-	cout << "±¸ÀÔÇÒ ¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏ¼¼¿ä : ";
+	cout << "êµ¬ì…í•  ì•„ì´í…œì„ ì„ íƒí•˜ì„¸ìš” : ";
 
 	int iMenu = InputInt();
 	if (iMenu <1 || iMenu > iItemCount + 1)
@@ -683,10 +813,10 @@ void BuyItem(_tagInventory* pInventory, _tagItem* pStore, int iItemCount,int iSt
 		system("cls");
 		switch (iStoreType) {
 		case SM_WEAPON:
-			cout << "**********************¹«±â»óÁ¡**********************" << endl << endl;
+			cout << "**********************ë¬´ê¸°ìƒì **********************" << endl << endl;
 			break;
 		case SM_ARMOR:
-			cout << "**********************¹æ¾î±¸»óÁ¡**********************" << endl << endl;
+			cout << "**********************ë°©ì–´êµ¬ìƒì **********************" << endl << endl;
 			break;
 		}
 
@@ -694,39 +824,39 @@ void BuyItem(_tagInventory* pInventory, _tagItem* pStore, int iItemCount,int iSt
 		
 		if (iInput == INT_MAX)
 		{
-			cout << "Àß¸ø ÀÔ·ÂÇÏ¿´½À´Ï´Ù." << endl;
+			cout << "ì˜ëª» ì…ë ¥í•˜ì˜€ìŠµë‹ˆë‹¤." << endl;
 			system("pause");
 			continue;
 		}
 		else if (iInput == iItemCount + 1) {
 			break;
 		}
-		// »óÁ¡ ÆÇ¸Å¸ñ·Ï ¹è¿­ÀÇ ÀÎµ¦½º¸¦ ±¸ÇØÁÜ.
+		// ìƒì  íŒë§¤ëª©ë¡ ë°°ì—´ì˜ ì¸ë±ìŠ¤ë¥¼ êµ¬í•´ì¤Œ.
 		int iIndex = iInput - 1;
-		//ÀÎº¥Åä¸®°¡ ²ËÃ¡´ÂÁö °Ë»ç.
+		//ì¸ë²¤í† ë¦¬ê°€ ê½‰ì°¼ëŠ”ì§€ ê²€ì‚¬.
 
 		if (pInventory->iItemCount == INVENTORY_MAX) {
-			cout << "°¡¹æÀÌ ²Ë Ã¡½À´Ï´Ù. " << endl;
+			cout << "ê°€ë°©ì´ ê½‰ ì°¼ìŠµë‹ˆë‹¤. " << endl;
 			system("pause");
 			continue;
 		}
-		//µ·ÀÌ ºÎÁ·ÇÒ °æ¿ì
+		//ëˆì´ ë¶€ì¡±í•  ê²½ìš°
 		else if(pInventory->iGold < pStore[iIndex].iPrice){
-			cout << "º¸À¯±İ¾×ÀÌ ºÎÁ·ÇÕ´Ï´Ù." << endl;
+			cout << "ë³´ìœ ê¸ˆì•¡ì´ ë¶€ì¡±í•©ë‹ˆë‹¤." << endl;
 			system("pause");
 			continue;	
 		}
-		//Ã³À½¿¡ iItemCount´Â ÇÏ³ªµµ Ãß°¡µÇ¾î ÀÖÁö ¾Ê±â ¶§¹®¿¡ 0À¸·Î 
-		//µÇ¾î ÀÖÀ¸¹Ç·Î 0¹ø ÀÎµ¦½º¿¡ ±¸¸ÅÇÑ ¾ÆÀÌÅÛÀ» Ãß°¡ÇÏ°Ô µÈ´Ù.
-		//Ä«¿îÆ®°¡ 1ÀÌ µÈ´Ù. ´ÙÀ½¹ø¿¡ Ãß°¡ÇÒ¶§´Â 1¹ø ÀÎµ¦½º¿¡ Ãß°¡°¡ µÈ´Ù.
+		//ì²˜ìŒì— iItemCountëŠ” í•˜ë‚˜ë„ ì¶”ê°€ë˜ì–´ ìˆì§€ ì•Šê¸° ë•Œë¬¸ì— 0ìœ¼ë¡œ 
+		//ë˜ì–´ ìˆìœ¼ë¯€ë¡œ 0ë²ˆ ì¸ë±ìŠ¤ì— êµ¬ë§¤í•œ ì•„ì´í…œì„ ì¶”ê°€í•˜ê²Œ ëœë‹¤.
+		//ì¹´ìš´íŠ¸ê°€ 1ì´ ëœë‹¤. ë‹¤ìŒë²ˆì— ì¶”ê°€í• ë•ŒëŠ” 1ë²ˆ ì¸ë±ìŠ¤ì— ì¶”ê°€ê°€ ëœë‹¤.
 
 		pInventory->tItem[pInventory->iItemCount] = pStore[iIndex];
 		++pInventory->iItemCount;
 
-		//°ñµå¸¦ Â÷°¨ÇÑ´Ù.
+		//ê³¨ë“œë¥¼ ì°¨ê°í•œë‹¤.
 		pInventory->iGold -= pStore[iIndex].iPrice;
 
-		cout << pStore[iIndex].strName << " ¾ÆÀÌÅÛÀ» ±¸¸ÅÇÏ¿´½À´Ï´Ù." << endl;
+		cout << pStore[iIndex].strName << " ì•„ì´í…œì„ êµ¬ë§¤í•˜ì˜€ìŠµë‹ˆë‹¤." << endl;
 		system("pause");
 	}
 }
@@ -749,25 +879,25 @@ void RunStore(_tagInventory* pInventory, _tagItem* pWeapon,
 
 int OutputInventory(_tagPlayer* pPlayer) {
 	system("cls");
-	cout << "**********************°¡¹æ**********************" << endl << endl;
+	cout << "**********************ê°€ë°©**********************" << endl << endl;
 	OutputPlayer(pPlayer);
 	for (int i = 0; i < pPlayer->tInventory.iItemCount; ++i) {
-		cout << i + 1 << ". ÀÌ¸§: " << pPlayer->tInventory.tItem[i].strName <<
-			"\t Á¾·ù : " << pPlayer->tInventory.tItem[i].strTypeName << endl;
+		cout << i + 1 << ". ì´ë¦„: " << pPlayer->tInventory.tItem[i].strName <<
+			"\t ì¢…ë¥˜ : " << pPlayer->tInventory.tItem[i].strTypeName << endl;
 		if (pPlayer->tInventory.tItem[i].eType == ITEM_WEAPON) {
-			cout << "°ø°İ·Â : " << pPlayer->tInventory.tItem[i].iMin << " - " <<
+			cout << "ê³µê²©ë ¥ : " << pPlayer->tInventory.tItem[i].iMin << " - " <<
 				pPlayer->tInventory.tItem[i].iMax << endl;
 		}
 		else if (pPlayer->tInventory.tItem[i].eType == ITEM_ARMOR) {
-			cout << "¹æ¾î·Â : " << pPlayer->tInventory.tItem[i].iMin << " - " <<
+			cout << "ë°©ì–´ë ¥ : " << pPlayer->tInventory.tItem[i].iMin << " - " <<
 				pPlayer->tInventory.tItem[i].iMax << endl;
 		}
-		cout << "ÆÇ¸Å °¡°İ : " << pPlayer->tInventory.tItem[i].iSell <<
-			"\t ±¸¸Å °¡°İ : " << pPlayer->tInventory.tItem[i].iPrice << endl;
-		cout << "¼³¸í : " << pPlayer->tInventory.tItem[i].strDesc << endl << endl;
+		cout << "íŒë§¤ ê°€ê²© : " << pPlayer->tInventory.tItem[i].iSell <<
+			"\t êµ¬ë§¤ ê°€ê²© : " << pPlayer->tInventory.tItem[i].iPrice << endl;
+		cout << "ì„¤ëª… : " << pPlayer->tInventory.tItem[i].strDesc << endl << endl;
 	}
-	cout << pPlayer->tInventory.iItemCount + 1 << ". µÚ·Î°¡±â" << endl << endl;
-	cout << "¾î¶² Àåºñ¸¦ ÀåÂøÇÏ½Ã°Ú½À´Ï±î?  :  ";
+	cout << pPlayer->tInventory.iItemCount + 1 << ". ë’¤ë¡œê°€ê¸°" << endl << endl;
+	cout << "ì–´ë–¤ ì¥ë¹„ë¥¼ ì¥ì°©í•˜ì‹œê² ìŠµë‹ˆê¹Œ?  :  ";
 	int iMenu=InputInt();
 	if (iMenu<1 || iMenu>pPlayer->tInventory.iItemCount + 1)
 		return INT_MAX;
@@ -776,7 +906,7 @@ int OutputInventory(_tagPlayer* pPlayer) {
 }
 
 EQUIP ComputeEquipType(ITEM_TYPE eType) {
-	//Á¦´ë·Î ¼±ÅÃÇßÀ» °æ¿ì ÇØ´ç ¾ÆÀÌÅÛÀÇ Á¾·ù¿¡ µû¶ó ÀåÂø ºÎÀ§¸¦ °áÁ¤
+	//ì œëŒ€ë¡œ ì„ íƒí–ˆì„ ê²½ìš° í•´ë‹¹ ì•„ì´í…œì˜ ì¢…ë¥˜ì— ë”°ë¼ ì¥ì°© ë¶€ìœ„ë¥¼ ê²°ì •
 	EQUIP eq;
 
 	switch (eType) {
@@ -800,23 +930,23 @@ void RunInventory(_tagPlayer* pPlayer) {
 		else if (iInput == pPlayer->tInventory.iItemCount + 1) {
 			break;
 		}
-		//¾ÆÀÌÅÛ ÀÎµ¦½º¸¦ ±¸ÇØÁØ´Ù.
+		//ì•„ì´í…œ ì¸ë±ìŠ¤ë¥¼ êµ¬í•´ì¤€ë‹¤.
 		int idx = iInput - 1;
 
 
 		EQUIP eq = ComputeEquipType(pPlayer->tInventory.tItem[idx].eType);
 		
 
-		//¾ÆÀÌÅÛÀÌ ÀåÂøµÇ¾î ÀÖÀ»°æ¿ì ÀåÂøÀÌ µÇ¾î ÀÖ´Â ¾ÆÀÌÅÛ°ú ÀåÂøÇÒ ¾ÆÀÌÅÛÀ»
-		//±³Ã¼ÇØ ÁÖ¾î¾ß ÇÑ´Ù Swap¾Ë°í¸®ÁòÀ» È°¿ëÇÑ´Ù.
+		//ì•„ì´í…œì´ ì¥ì°©ë˜ì–´ ìˆì„ê²½ìš° ì¥ì°©ì´ ë˜ì–´ ìˆëŠ” ì•„ì´í…œê³¼ ì¥ì°©í•  ì•„ì´í…œì„
+		//êµì²´í•´ ì£¼ì–´ì•¼ í•œë‹¤ Swapì•Œê³ ë¦¬ì¦˜ì„ í™œìš©í•œë‹¤.
 
 		if (pPlayer->bEquip[eq] == true) {
 			_tagItem tSwap = pPlayer->tEquip[eq];
 			pPlayer->tEquip[eq] = pPlayer->tInventory.tItem[idx];
 			pPlayer->tInventory.tItem[idx] = tSwap;
 		}
-		//ÀåÂøµÇ¾îÀÖÁö ¾ÊÀ» °æ¿ì ÀÎº¥Åä¸® ¾ÆÀÌÅÛÀ» ÀåÂøÃ¢À¸·Î ¿Å±â°í
-	   //ÀÎº¥Åä¸®´Â 1Ä­ ºñ¿öÁö°Ô µÈ´Ù.
+		//ì¥ì°©ë˜ì–´ìˆì§€ ì•Šì„ ê²½ìš° ì¸ë²¤í† ë¦¬ ì•„ì´í…œì„ ì¥ì°©ì°½ìœ¼ë¡œ ì˜®ê¸°ê³ 
+	   //ì¸ë²¤í† ë¦¬ëŠ” 1ì¹¸ ë¹„ì›Œì§€ê²Œ ëœë‹¤.
 
 		else {
 			pPlayer->tEquip[eq] = pPlayer->tInventory.tItem[idx];
@@ -825,10 +955,10 @@ void RunInventory(_tagPlayer* pPlayer) {
 				pPlayer->tInventory.tItem[i] = pPlayer->tInventory.tItem[i + 1];
 			}
 			--pPlayer->tInventory.iItemCount;
-			//Àåºñ¸¦ ÀåÂøÇß±â ¶§¹®¿¡ true·Î ¸¸µé¾îÁØ´Ù
+			//ì¥ë¹„ë¥¼ ì¥ì°©í–ˆê¸° ë•Œë¬¸ì— trueë¡œ ë§Œë“¤ì–´ì¤€ë‹¤
 			pPlayer->bEquip[eq] = true;
 		}
-		cout << pPlayer->tEquip[eq].strName << "(À»)¸¦ ÀåÂøÇÏ¿´½À´Ï´Ù ." << endl << endl;
+		cout << pPlayer->tEquip[eq].strName << "(ì„)ë¥¼ ì¥ì°©í•˜ì˜€ìŠµë‹ˆë‹¤ ." << endl << endl;
 		system("pause");
 	}
 }
@@ -843,10 +973,10 @@ _tagItem CreateItem(const char* pName, ITEM_TYPE eType, int iMin,
 	tItem.eType = eType;
 	switch (eType) {
 	case ITEM_WEAPON:
-		strcpy_s(tItem.strTypeName, "¹«±â");
+		strcpy_s(tItem.strTypeName, "ë¬´ê¸°");
 		break;
 	case ITEM_ARMOR:
-		strcpy_s(tItem.strTypeName, "¹æ¾î±¸");
+		strcpy_s(tItem.strTypeName, "ë°©ì–´êµ¬");
 		break;
 
 	}
@@ -859,24 +989,67 @@ _tagItem CreateItem(const char* pName, ITEM_TYPE eType, int iMin,
 	return tItem;
 
 }
-
+bool LoadStore(_tagItem* pWeapon, _tagItem* pArmor) {
+	FILE* pFile = NULL;
+	fopen_s(&pFile, "Store.str", "rb");
+	if (pFile) {
+		fread(pWeapon, sizeof(_tagItem), STORE_WEAPON_MAX, pFile);
+		fread(pArmor, sizeof(_tagItem), STORE_ARMOR_MAX, pFile);
+		fclose(pFile);
+		return true;
+	}
+	return false;
+}
 int main(){
 	srand((unsigned int)time(0));
 	
-	//°ÔÀÓÀ» ½ÃÀÛÇÒ ¶§ ÇÃ·¹ÀÌ¾î Á¤º¸¸¦ ¼³Á¤ÇÏ°Ô ÇÑ´Ù.
+	//ê²Œì„ì„ ì‹œì‘í•  ë•Œ í”Œë ˆì´ì–´ ì •ë³´ë¥¼ ì„¤ì •í•˜ê²Œ í•œë‹¤.
 	_tagPlayer tPlayer = {};
 
+	int iGameMode=0;
+
+	while (iGameMode <=GM_NONE || iGameMode >GM_EXIT) {
+		system("cls");
+		cout << "1.ìƒˆë¡œí•˜ê¸°" << endl;
+		cout << "2.ì´ì–´í•˜ê¸°" << endl;
+		cout << "3.ì¢…ë£Œ" << endl;
+		cout << "ë©”ë‰´ë¥¼ ì„ íƒí•˜ì„¸ìš” : ";
+		iGameMode = InputInt();
+	}
+	if (iGameMode == GM_EXIT)
+		return 0;
+
+	switch (iGameMode) {
+	case GM_NEW:
+		//í”Œë ˆì´ì–´ì˜ ì •ë³´ë¥¼ ì •ì˜í•¨
+		SetPlayer(&tPlayer);
+		break;
+
+	case GM_LOAD:
+		//í”Œë ˆì´ì–´ì˜ ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜´
+		//LoadPlayerì˜ ë°˜í™˜ê°’ì´ falseì¼ ê²½ìš° ì‹¤í–‰
+		if (!LoadPlayer(&tPlayer)) {
+			system("cls");
+			cout << "ì €ì¥ëœ í”Œë ˆì´ì–´ì˜ ì •ë³´ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤!" << endl;
+			return 0;
+		}
+		else {
+
+		}
+		break;
+
+	}
+
 	_tagMonster tMonsterArr[MT_BACK - 1] = {};
-	// »óÁ¡¿¡¼­ ÆÇ¸ÅÇÒ ¾ÆÀÌÅÛ ¸ñ·ÏÀ» »ı¼ºÇÑ´Ù.
+	// ìƒì ì—ì„œ íŒë§¤í•  ì•„ì´í…œ ëª©ë¡ì„ ìƒì„±í•œë‹¤.
 	_tagItem tStoreWeapon[STORE_WEAPON_MAX] = {};
 	_tagItem tStoreArmor[STORE_ARMOR_MAX] = {};
 
 
-	//ÇÃ·¹ÀÌ¾îÀÇ Á¤º¸¸¦ Á¤ÀÇÇÔ
-	SetPlayer(&tPlayer);
-	//¸ó½ºÅÍÀÇ Á¤º¸¸¦ Á¤ÀÇÇÔ
+	
+	//ëª¬ìŠ¤í„°ì˜ ì •ë³´ë¥¼ ì •ì˜í•¨
 	SetMonster(tMonsterArr);
-	//¾ÆÀÌÅÛ Á¤º¸¸¦ Á¤ÀÇÇÔ
+	//ì•„ì´í…œ ì •ë³´ë¥¼ ì •ì˜í•¨
 	SetWeapon(tStoreWeapon);
 	SetArmor(tStoreArmor);
 
@@ -885,26 +1058,26 @@ int main(){
 	g_tLvUpTable[JOB_WIZARD - 1] = CreateLvUpstate(15, 20, 3, 8, 20, 40, 50, 100);
 
 	
-
-	tStoreWeapon[WL_SWORD - 1] = CreateItem("¸ñ°Ë",ITEM_WEAPON,5,10,
-		1000,500,"³ª¹«·Î¸¸µç ¸ñ°Ë");
-	tStoreWeapon[WL_BOW - 1] = CreateItem("Àå±Ã", ITEM_WEAPON, 20, 40,
-		7000, 3500, "Â¯Â¯ÇÑ È°");
-	tStoreWeapon[WL_STAFF - 1] = CreateItem("Å«ÁöÆÎÀÌ", ITEM_WEAPON, 90, 150,
-		30000, 15000, "³ª¹«·Î¸¸µç ÁöÆÎÀÌ");
-
-	tStoreArmor[AL_HEAD - 1] = CreateItem("Åõ±¸",ITEM_ARMOR,  10,
-		20,7000,3500,"³ª¹«·Î¸¸µç Åõ±¸");
-	tStoreArmor[AL_BODY - 1] = CreateItem("°©¿Ê",ITEM_ARMOR, 70,
-		90, 30000, 10500, "³ª¹«·Î¸¸µç °©¿Ê");
-	tStoreArmor[AL_FOOT - 1] = CreateItem("½Å¹ß",ITEM_ARMOR, 5,
-		10, 2000, 1000, "³ª¹«·Î¸¸µç ½Å¹ß");
+	LoadStore(tStoreWeapon, tStoreArmor);
+//tStoreWeapon[WL_SWORD - 1] = CreateItem("ëª©ê²€",ITEM_WEAPON,5,10,
+//	1000,500,"ë‚˜ë¬´ë¡œë§Œë“  ëª©ê²€");
+//tStoreWeapon[WL_BOW - 1] = CreateItem("ì¥ê¶", ITEM_WEAPON, 20, 40,
+//	7000, 3500, "ì§±ì§±í•œ í™œ");
+//tStoreWeapon[WL_STAFF - 1] = CreateItem("í°ì§€íŒ¡ì´", ITEM_WEAPON, 90, 150,
+//	30000, 15000, "ë‚˜ë¬´ë¡œë§Œë“  ì§€íŒ¡ì´");
+//
+//tStoreArmor[AL_HEAD - 1] = CreateItem("íˆ¬êµ¬",ITEM_ARMOR,  10,
+//	20,7000,3500,"ë‚˜ë¬´ë¡œë§Œë“  íˆ¬êµ¬");
+//tStoreArmor[AL_BODY - 1] = CreateItem("ê°‘ì˜·",ITEM_ARMOR, 70,
+//	90, 30000, 10500, "ë‚˜ë¬´ë¡œë§Œë“  ê°‘ì˜·");
+//tStoreArmor[AL_FOOT - 1] = CreateItem("ì‹ ë°œ",ITEM_ARMOR, 5,
+//	10, 2000, 1000, "ë‚˜ë¬´ë¡œë§Œë“  ì‹ ë°œ");
 
 	bool	bLoop = true;
 	while (bLoop) {
 		switch (OuputMainMenu()) {
 		case MM_MAP:
-			RunMap(&tPlayer,tMonsterArr); //¸Ê °ü·Ã ·çÇÁ¸¦ Ã³¸®
+			RunMap(&tPlayer,tMonsterArr); //ë§µ ê´€ë ¨ ë£¨í”„ë¥¼ ì²˜ë¦¬
 			
 			break;
 		case MM_STORE:
@@ -919,7 +1092,15 @@ int main(){
 			break;
 		}
 	}
+	if (SavePlayer(&tPlayer)) {
+		cout << endl;
+		cout << "ì €ì¥ ì™„ë£Œ!"<<endl;
+	}
+	else {
+		cout << endl;
+		cout << "ì €ì¥ ì‹¤íŒ¨!" << endl;
+	}
+
 	return 0;
 }
-
 */

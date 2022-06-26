@@ -166,6 +166,7 @@
     <ClCompile Include="Homework5.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="ItemTool.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp">
@@ -199,6 +200,7 @@
     <ClCompile Include="Maze.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="MonsterTool.cpp" />
     <ClCompile Include="Pointer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
