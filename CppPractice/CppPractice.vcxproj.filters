@@ -93,13 +93,13 @@
     <ClCompile Include="Maze(file).cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryFile.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="MonsterTool.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ItemTool.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Class_Base.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
