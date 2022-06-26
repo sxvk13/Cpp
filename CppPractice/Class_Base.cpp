@@ -1,5 +1,5 @@
 ﻿/*
-	Lecture 56 Class Base ~ Lecture 56 Constructor, Destructor
+	Lecture 56 Class Base ~ Lecture 57 Constructor, Destructor
 */
 
 #include <iostream>
